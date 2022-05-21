@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "mssql1": {
-      "type": "mssql.local",
-      "connectionId": "ConnectionStrings:advanced_programmins_2_assignment_2_aspContext"
-    }
-  }
-}

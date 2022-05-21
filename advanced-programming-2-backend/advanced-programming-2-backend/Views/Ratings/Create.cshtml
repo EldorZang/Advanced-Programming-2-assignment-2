@@ -1,0 +1,86 @@
+﻿@model advanced_programming_2_backend.Models.Rating
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+<script>
+    function rate1() {
+        document.getElementById("star2").setAttribute("src", document.getElementById("star2").getAttribute("empty"));
+        document.getElementById("star3").setAttribute("src", document.getElementById("star3").getAttribute("empty"));
+        document.getElementById("star4").setAttribute("src", document.getElementById("star4").getAttribute("empty"));
+        document.getElementById("star5").setAttribute("src", document.getElementById("star5").getAttribute("empty"));
+        document.getElementById("ratingValue").setAttribute("value", "1");
+    }
+    function rate2() {
+        document.getElementById("star2").setAttribute("src", document.getElementById("star2").getAttribute("filled"));
+        document.getElementById("star3").setAttribute("src", document.getElementById("star3").getAttribute("empty"));
+        document.getElementById("star4").setAttribute("src", document.getElementById("star4").getAttribute("empty"));
+        document.getElementById("star5").setAttribute("src", document.getElementById("star5").getAttribute("empty"));
+        document.getElementById("ratingValue").setAttribute("value", "2");
+    }
+    function rate3() {
+        document.getElementById("star2").setAttribute("src", document.getElementById("star2").getAttribute("filled"));
+        document.getElementById("star3").setAttribute("src", document.getElementById("star3").getAttribute("filled"));
+        document.getElementById("star4").setAttribute("src", document.getElementById("star4").getAttribute("empty"));
+        document.getElementById("star5").setAttribute("src", document.getElementById("star5").getAttribute("empty"));
+        document.getElementById("ratingValue").setAttribute("value", "3");
+    }
+    function rate4() {
+        document.getElementById("star2").setAttribute("src", document.getElementById("star2").getAttribute("filled"));
+        document.getElementById("star3").setAttribute("src", document.getElementById("star3").getAttribute("filled"));
+        document.getElementById("star4").setAttribute("src", document.getElementById("star4").getAttribute("filled"));
+        document.getElementById("star5").setAttribute("src", document.getElementById("star5").getAttribute("empty"));
+        document.getElementById("ratingValue").setAttribute("value", "4");
+    }
+    function rate5() {
+        document.getElementById("star2").setAttribute("src", document.getElementById("star2").getAttribute("filled"));
+        document.getElementById("star3").setAttribute("src", document.getElementById("star3").getAttribute("filled"));
+        document.getElementById("star4").setAttribute("src", document.getElementById("star4").getAttribute("filled"));
+        document.getElementById("star5").setAttribute("src", document.getElementById("star5").getAttribute("filled"));
+        document.getElementById("ratingValue").setAttribute("value", "5");
+    }
+</script>
+
+<h1>Create</h1>
+
+<h4>Rating</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <img src="~/Images/starFilled.png" align="middle" id="star1" onclick="rate1()" />
+                <img src="~/Images/starFilled.png" empty="/Images/starEmpty.png" filled="/Images/starFilled.png" align="middle" id="star2" onclick="rate2()" />
+                <img src="~/Images/starFilled.png" empty="/Images/starEmpty.png" filled="/Images/starFilled.png" align="middle" id="star3" onclick="rate3()" />
+                <img src="~/Images/starEmpty.png" empty="/Images/starEmpty.png" filled="/Images/starFilled.png" align="middle" id="star4" onclick="rate4()" />
+                <img src="~/Images/starEmpty.png" empty="/Images/starEmpty.png" filled="/Images/starFilled.png" align="middle" id="star5" onclick="rate5()" />
+                <input type="hidden" asp-for="Score" class="form-control" id="ratingValue" value="3"/>
+                <span asp-validation-for="Score" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
