@@ -4,45 +4,70 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<script>
+    function rate(value) {
+        var stars = [];
+        stars[0] = document.getElementById("2");
+        stars[1] = document.getElementById("3");
+        stars[2] = document.getElementById("4");
+        stars[3] = document.getElementById("5");
+        document.getElementById("ratingValue").setAttribute("value", value.toString());
+        for (let i = 0; i < value - 1; i++) {
+            stars[i].setAttribute("src", stars[i].getAttribute("filled"));
+        }
+        for (let i = value - 1; i < 4; i++) {
+            stars[i].setAttribute("src", stars[i].getAttribute("empty"));
+        }
+    }
+    function updateDescription(desc) {
+        document.getElementById("desc").setAttribute("value", desc.value);
+    }
+</script>
 
-<h4>Rating</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Score" class="control-label"></label>
-                <input asp-for="Score" class="form-control" />
-                <span asp-validation-for="Score" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
-                <span asp-validation-for="Date" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+<h1>Edit Rating</h1>
+<div style="text-align:center; padding: 0.5rem 0; width:100%; color:rgb(55, 55, 55)">
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <img src="~/Images/starGold.png" align="middle" id="1" onclick="rate(1)" />
+                <img src="~/Images/starGold.png" empty="/Images/starHollow.png" filled="/Images/starGold.png" align="middle" id="2" onclick="rate(2)" />
+                <img src="~/Images/starGold.png" empty="/Images/starHollow.png" filled="/Images/starGold.png" align="middle" id="3" onclick="rate(3)" />
+                <img src="~/Images/starGold.png" empty="/Images/starHollow.png" filled="/Images/starGold.png" align="middle" id="4" onclick="rate(4)" />
+                <img src="~/Images/starGold.png" empty="/Images/starHollow.png" filled="/Images/starGold.png" align="middle" id="5" onclick="rate(5)" />
+            <input type="hidden" asp-for="Score" class="form-control" id="ratingValue" style="padding:1rem" />
+            <span asp-validation-for="Score" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Title" class="control-label" style="color:aquamarine; font-size:130%"></label>
+            <input asp-for="Title" class="form-control" style="padding:0.5rem" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Description" class="control-label" style="color:aquamarine; font-size:130%"></label>
+            <input type="hidden" id="desc" asp-for="Description" class="form-control" style="width:30rem; height:5rem; padding:0.5rem" />
+            <textarea asp-for="Description" class="form-control" style="width:30rem; height:15rem; padding:0.5rem" maxlength="500" onchange="updateDescription(this)"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </form>
+    <p>
+        <a asp-action="Index" style="padding: 0.5rem">Back to List</a>
+    </p>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<script>
+    function refresh(val) {
+        if (parseInt(document.getElementById("ratingValue").getAttribute("value")) < val) {
+            document.getElementById(val.toString()).setAttribute("src", document.getElementById(val.toString()).getAttribute("empty"));
+        }
+    }
+    refresh(2);
+    refresh(3);
+    refresh(4);
+    refresh(5);
+</script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

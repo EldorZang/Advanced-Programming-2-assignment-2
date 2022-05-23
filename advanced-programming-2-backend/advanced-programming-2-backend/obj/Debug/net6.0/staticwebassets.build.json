@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "rDApx54piI3gRIFOt1Sv/xb8COrb0W45uuTSoQpVj9g=",
+  "Hash": "xvOopy5PYsGk+6A3aRfHuNk5XY3KX9pun5dTaOWKx3I=",
   "Source": "advanced-programming-2-backend",
   "BasePath": "_content/advanced-programming-2-backend",
   "Mode": "Default",
@@ -51,6 +51,23 @@
       "OriginalItemSpec": "C:\\Users\\USER\\source\\repos\\advanced-programming-2-backend\\advanced-programming-2-backend\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\advanced-programming-2-backend.bundle.scp.css"
     },
     {
+      "Identity": "C:\\Users\\USER\\source\\repos\\advanced-programming-2-backend\\advanced-programming-2-backend\\wwwroot\\css\\index.css",
+      "SourceId": "advanced-programming-2-backend",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\USER\\source\\repos\\advanced-programming-2-backend\\advanced-programming-2-backend\\wwwroot\\",
+      "BasePath": "_content/advanced-programming-2-backend",
+      "RelativePath": "css/index.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\index.css"
+    },
+    {
       "Identity": "C:\\Users\\USER\\source\\repos\\advanced-programming-2-backend\\advanced-programming-2-backend\\wwwroot\\css\\site.css",
       "SourceId": "advanced-programming-2-backend",
       "SourceType": "Discovered",
@@ -85,12 +102,12 @@
       "OriginalItemSpec": "wwwroot\\favicon.ico"
     },
     {
-      "Identity": "C:\\Users\\USER\\source\\repos\\advanced-programming-2-backend\\advanced-programming-2-backend\\wwwroot\\Images\\starEmpty.png",
+      "Identity": "C:\\Users\\USER\\source\\repos\\advanced-programming-2-backend\\advanced-programming-2-backend\\wwwroot\\Images\\starGold.png",
       "SourceId": "advanced-programming-2-backend",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\USER\\source\\repos\\advanced-programming-2-backend\\advanced-programming-2-backend\\wwwroot\\",
       "BasePath": "_content/advanced-programming-2-backend",
-      "RelativePath": "Images/starEmpty.png",
+      "RelativePath": "Images/starGold.png",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -99,15 +116,15 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\Images\\starEmpty.png"
+      "OriginalItemSpec": "wwwroot\\Images\\starGold.png"
     },
     {
-      "Identity": "C:\\Users\\USER\\source\\repos\\advanced-programming-2-backend\\advanced-programming-2-backend\\wwwroot\\Images\\starFilled.png",
+      "Identity": "C:\\Users\\USER\\source\\repos\\advanced-programming-2-backend\\advanced-programming-2-backend\\wwwroot\\Images\\starHollow.png",
       "SourceId": "advanced-programming-2-backend",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\USER\\source\\repos\\advanced-programming-2-backend\\advanced-programming-2-backend\\wwwroot\\",
       "BasePath": "_content/advanced-programming-2-backend",
-      "RelativePath": "Images/starFilled.png",
+      "RelativePath": "Images/starHollow.png",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -116,7 +133,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\Images\\starFilled.png"
+      "OriginalItemSpec": "wwwroot\\Images\\starHollow.png"
     },
     {
       "Identity": "C:\\Users\\USER\\source\\repos\\advanced-programming-2-backend\\advanced-programming-2-backend\\wwwroot\\js\\site.js",

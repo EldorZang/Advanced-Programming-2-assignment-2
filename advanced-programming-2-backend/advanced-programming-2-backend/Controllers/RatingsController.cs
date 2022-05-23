@@ -91,6 +91,7 @@ namespace advanced_programming_2_backend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Score,Title,Date,Description")] Rating rating)
         {
+            rating.Date = DateTime.Now;
             if (id != rating.Id)
             {
                 return NotFound();
