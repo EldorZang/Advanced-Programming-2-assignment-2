@@ -11,6 +11,7 @@ import { MessagesInfo, UsersInfo } from './databaseArrs'
 import { AlertModal, RecordAudioModal, AddContactModal, AddFileModal } from './ChatPageModals.js'
 
 import backgroundImage from './images/chatPageBackground.jpg'
+import sampleProfileImage from './images/sampleProfile.jpg'
 import message_sent from "./images/sent_message.png";
 import message_recv from "./images/recv_message.png";
 
@@ -18,106 +19,125 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './chatPage.css'
 
 // Contexts for accessing global variables without passing each time as props
-export const UsersContext = createContext(UsersInfo);
 export const MessagesContext = createContext(MessagesInfo);
 export const ContactsContext = createContext("");
+export const ContactsInfoContext = createContext("");
 export const ActiveUserContext = createContext("user2");
 export const LoggedUserContext = createContext("user1");
+export const ServerContext = createContext("https://localhost:7024");
 export const forceUpdateContext = createContext("");
 
 // Landing page
 export function Main({ usersMap, loggedUsername }) {
-
+    
     // Get a userBar info (name,picture and most recent message).
-    const ResolveUserInfo = (userName) => {
-
+    const ResolveUserInfo = async (userName) => {
+        var timeStamp = "";
+        var message = "";
+        var picture = sampleProfileImage;
+        var nickName = "";
+        var msgsArr;
+        var res = await fetch('https://localhost:7024/Api/nickName/' + userName).then(function(response) {
+            return response.json();
+        })
+        .then(function(parsedData) {
+            nickName=parsedData;  
+        })
+        console.log(nickName);
+        var msgs = await fetch('https://localhost:7024/Api/contacts/' +userName + '/messages?loggedUserId='+loggedUser).then(function(response) {
+            return response.json();
+        })
+        .then(function(parsedData) {
+            msgsArr=parsedData;  
+        })
+        console.log(msgsArr);
+        var numMsgs = msgsArr.length;
         // Edge case in which there is an empty chat.
-        if (messagesData[loggedUser][userName].length == 0) {
+        if (numMsgs == 0) {
             return ({
                 "timeStamp": "",
                 "message": "",
-                "picture": usersData[userName].profile,
-                "nickName": usersData[userName].nickName,
+                "picture": picture,
+                "nickName": nickName,
                 "userName": userName
             });
         }
-        var recentMsgId = (messagesData[loggedUser])[userName].length - 1;
-        var recentMsg = messagesData[loggedUser][userName][recentMsgId];
-        var timeStamp = recentMsg.timeStamp;
-        var recentMessage, picture, nickName;
-        if (recentMsg.type === "text") {
-            recentMessage = recentMsg.data
-        }
-        else {
-            recentMessage = recentMsg.type
-        }
-        picture = usersData[userName].profile
-        nickName = usersData[userName].nickName
+        
+        var recentMsg = msgsArr[numMsgs-1];
+        var lastdate = recentMsg.created;
+        var last = recentMsg.content
         return ({
-            "timeStamp": timeStamp,
-            "message": recentMessage,
+            "timeStamp": lastdate,
+            "message": last,
             "picture": picture,
             "nickName": nickName,
             "userName": userName
         });
     }
 
-    // Convert a map to a JS object.
-    const mapToObj = (inputMap) => {
-        const obj = {};
-        inputMap.forEach((value, key) => { obj[key] = value; });
-        return obj;
-    }
-    const [usersData, setUsersData] = useState(mapToObj(usersMap));
     const [messagesData, setMessagesData] = useState(MessagesInfo);
     const [activeUser, setActiveUser] = useState("");
     const [loggedUser, setLoggedUser] = useState(loggedUsername);
     const [forceUpdate, setForceUpdate] = useState("temp");
-
-    // Add a user to the messages database.
-    const addNewUser = (newUser) => {
-        var newMessagesData = messagesData;
-        var newUserKeyEntry = {};
-        Object.keys(messagesData).forEach((currUser) => {
-            newUserKeyEntry[currUser] = [];
-            newMessagesData[currUser][newUser] = [];
-        });
-        newMessagesData[newUser] = newUserKeyEntry;
-        setMessagesData(newMessagesData);
-    }
-
-    // Add all new registered user to the messages database.
-    const addNewUsers = () => {
-        Object.keys(usersData).forEach((user) => {
-            if (!messagesData.hasOwnProperty(user)) {
-                addNewUser(user);
-            }
+    const [Server, setServer] = useState("https://localhost:7024");
+    const [contacts,setContacts] = useState([]);
+    const [ContactsNames,setContactsNames] = useState([]);
+    const [updateContacts,setupdateContacts] = useState(false);
+    const [contactsNumber,setContactsNumber] = useState(0);
+    const [chatUsersSideBarInfo,setChatUsersSideBarInfo] = useState([]);
+    useEffect( async ()=>{
+        var newContactsNames = [];
+        console.log(loggedUser);
+        var res = await fetch('https://localhost:7024/Api/contacts?loggedUserId='+loggedUser).then(function(response) {
+            return response.json();
         })
-    }
-
-    addNewUsers();
-
+        .then(function(parsedData) {
+            console.log(parsedData);
+            console.log(parsedData.length);
+            if(parsedData.length==contactsNumber){
+                return;
+            }
+            for(var i=0;i<parsedData.length;i++){
+                newContactsNames = [...newContactsNames,parsedData[i]["id"]];
+            }
+            setContactsNumber(parsedData.length);
+            setContactsNames(newContactsNames);
+        })
+    },[ContactsNames])
     // Get sidebar data.
-    var chatUsersSideBarInfo = [];
-    ((usersData[loggedUser])["friends"]).map((user) => {
-        chatUsersSideBarInfo = [...chatUsersSideBarInfo, ResolveUserInfo(user)]
-    })
-    const [contacts, setContacts] = useState(chatUsersSideBarInfo);
+    console.log(ContactsNames);
+
+  //  var chatUsersSideBarInfo = [];
+  useEffect( async ()=>{
+      console.log("123")
+      var newChatUsersSideBarInfo = [];
+    for(var j=0;j<ContactsNames.length;j++){
+        var newEntry = ResolveUserInfo(ContactsNames[j]);
+        newChatUsersSideBarInfo = [...newChatUsersSideBarInfo, newEntry]
+    }
+    setChatUsersSideBarInfo(newChatUsersSideBarInfo);
+    console.log("1423")
+    },[ContactsNames])
+
+
+    console.log(chatUsersSideBarInfo);
     return (
         <forceUpdateContext.Provider value={{ forceUpdate, setForceUpdate }}>
-            <UsersContext.Provider value={{ usersData, setUsersData }}>
+            <ContactsInfoContext.Provider value={{chatUsersSideBarInfo,setChatUsersSideBarInfo}}>
+            <ServerContext.Provider value={{Server,setServer}}>
                 <MessagesContext.Provider value={{ messagesData, setMessagesData }}>
                     <ContactsContext.Provider value={{ contacts, setContacts }}>
                         <ActiveUserContext.Provider value={{ activeUser, setActiveUser }}>
                             <LoggedUserContext.Provider value={{ loggedUser, setLoggedUser }}>
                                 <div className="background" style={{ backgroundImage: `url(${backgroundImage}` }}>
-                                    <ChatPage />
+                                <ChatPage />
                                 </div>
                             </LoggedUserContext.Provider>
                         </ActiveUserContext.Provider>
                     </ContactsContext.Provider>
                 </MessagesContext.Provider>
-            </UsersContext.Provider>
+                </ServerContext.Provider>
+                </ContactsInfoContext.Provider>
         </forceUpdateContext.Provider>)
 }
 
@@ -130,6 +150,35 @@ export function ChatPage() {
     const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);
     const [textInput, setTextInput] = useState("");
     const [showModal, setShowModal] = useState(false);
+    const [submit, setSubmit] = useState(false);
+
+    useEffect(async ()=>{
+        if(submit == false){
+            return;
+        }
+        // Add the message in the sender server.
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content: textInput})
+        };
+        var res = await fetch('https://localhost:7024/Api/contacts/'+activeUser+'/messages?loggedUserId='+loggedUser, requestOptions);
+
+        // Add the message in the reciver server.
+        // get reciver server
+        var recvServer = await fetch('https://localhost:7024/Api/contacts/'+activeUser+'?loggedUserId='+loggedUser);
+        recvServer = recvServer.json()["server"];
+        const requestOptionsTransfer = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content: textInput})
+        };
+        var res = await fetch(recvServer+'/Api/transfer', requestOptionsTransfer);
+        setTextInput("");
+        setSubmit(false);
+    },[submit])
+
+
     const handleMessageInputChange = (e) => {
         e.preventDefault();
         setTextInput(e.target.value);
@@ -140,37 +189,8 @@ export function ChatPage() {
             setShowModal(true);
             return;
         }
-        var currTime = new Date().toLocaleString() + "";
-        var newMessagesData = messagesData;
-        // Add the message in the sender mesagges arr.
-        newMessagesData[loggedUser][activeUser] = [...newMessagesData[loggedUser][activeUser], {
-            recieved: false,
-            type: "text",
-            data: textInput,
-            timeStamp: currTime
-        }];
-
-        // Add the message in the reciver mesagges arr.
-        newMessagesData[activeUser][loggedUser] = [...newMessagesData[activeUser][loggedUser], {
-            recieved: true,
-            type: "text",
-            data: textInput,
-            timeStamp: currTime
-        }];
-        setMessagesData(newMessagesData);
-
-        // Update the last message in the contacts info.
-        var newContacts = contacts;
-        newContacts.map((contact) => {
-            if (contact.userName === activeUser) {
-                contact.message = textInput;
-                contact.timeStamp = currTime;
-            }
-        })
-        setContacts(newContacts)
-        setTextInput("");
-        setForceUpdate(new Date().toLocaleString() + "" + getRandomNum());
-    };
+        setSubmit(true);
+    }
     return (
         <Container >
             <Row>
@@ -195,9 +215,6 @@ export function ChatPage() {
                         <Button class="btn btn-outline-success" variant="success" type="submit" >
                             <img src={process.env.PUBLIC_URL + '/sendIcon.png'} height="35" width="35" alt="Record" />
                         </Button>
-                        <AddFileButton type="picture" />
-                        <AddFileButton type="video" />
-                        <RecordAudioButton />
                     </Form>
                 </Col>
             </Row>
@@ -208,13 +225,21 @@ export function ChatPage() {
 
 function UserInfo() {
     const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);
-    const { usersData, setUsersData } = useContext(UsersContext);
+    const [nickName, setNickName] = useState(" ");
+    useEffect(async () =>{
+        var res = await fetch('https://localhost:7024/Api/nickName/' + loggedUser).then(function(response) {
+            return response.json();
+        })
+        .then(function(parsedData) {
+            setNickName(parsedData);
+        })
+    },[])
     return (
         <Container >
             <Row className="loggedUserInfo">
-                <Col className="align-left "><img src={usersData[loggedUser]["profile"]} alt="loggedUser's picture"
+                <Col className="align-left "><img src={sampleProfileImage} alt="loggedUser's picture"
                     width="50" height="50" /></Col>
-                <Col className="align-center d-flex align-items-center justify-content-center"><p>{usersData[loggedUser]["nickName"]}</p></Col>
+                <Col className="align-center d-flex align-items-center justify-content-center"><p>{nickName}</p></Col>
                 <Col className="align-right"><AddContactButton className="addButton" /> </Col>
             </Row>
         </Container>
@@ -236,11 +261,13 @@ function AddContactButton() {
 export function ChatsNavigation() {
     const { messagesData, setMessagesData } = useContext(MessagesContext);
     const { contacts, setContacts } = useContext(ContactsContext);
+    const {chatUsersSideBarInfo,setChatUsersSideBarInfo} = useContext(ContactsInfoContext)
     const { activeUser, setActiveUser } = useContext(ActiveUserContext);
     const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);
     var handleOnSelect = (e) => {
         setActiveUser(e);
     }
+    console.log(chatUsersSideBarInfo);
     return (
         <Tab.Container id="left-tabs-example"
             activeKey={activeUser}
@@ -249,7 +276,7 @@ export function ChatsNavigation() {
             <Row>
                 <Col className="contactsBar">
                     <Nav variant="pills" className="flex-column nav nav-tabs">
-                        {contacts.map((chatsInfosData, index) => {
+                        {chatUsersSideBarInfo.map((chatsInfosData, index) => {
                             return (
                                 <Nav.Item key={index}>
                                     <Nav.Link eventKey={chatsInfosData.userName}>
@@ -261,7 +288,7 @@ export function ChatsNavigation() {
                 </Col>
                 <Col>
                     <Tab.Content>
-                        {contacts.map((chatsInfosData, index) => {
+                        {chatUsersSideBarInfo.map((chatsInfosData, index) => {
                             return (
                                 <Tab.Pane key={index} eventKey={chatsInfosData.userName}>
                                     <MessageWindow data={messagesData[loggedUser][chatsInfosData.userName]} />
@@ -274,8 +301,9 @@ export function ChatsNavigation() {
     )
 }
 export function ChatInfo(props) {
-    var info = props.data;
-    var recentMsg = info.message;
+    console.log(props);
+    var info =  props.data;
+    var recentMsg =  info.message;
     // Splitting to more than one line if message is too long.
     if (recentMsg.length > 25) {
         // recentMsg = recentMsg.replace(/(.{25})/g,"$1\n")
@@ -305,7 +333,7 @@ export function MessageWindow(props) {
                 {msgs.map((messageData, index) => {
                     return (
                         <Row key={index}>
-                            <Message data={messageData.data} recieved={messageData.recieved} type={messageData.type} file={messageData.file} timeStamp={messageData.timeStamp} />
+                            <Message data={messageData.data} recieved={messageData.recieved} timeStamp={messageData.timeStamp} />
                         </Row>
                     );
                 })}
@@ -334,7 +362,6 @@ export function Message(props) {
         messageClass = "sent_message";
     }
 
-    if (props.type === "text") {
         dataClass = dataClass + "_text"
         // Adjusting text balloon height.
         var numberOfLines = Math.floor(props.data.length / 35) + 1;
@@ -364,116 +391,12 @@ export function Message(props) {
                     <img src={image} alt="Info" width={bubbleWidth} height={bubbleHeight} />
                 </div>
             </div>
-        )
-    }
-    else if (props.type === "picture") {
-        dataClass = dataClass + "_file"
-        bubbleClass = bubbleClass + "_file"
-        return (
-            <>
-                <div className={messageClass}>
-
-                    <div className={bubbleClass} >
-                        <span className="timeStamp">{props.timeStamp.slice(-8)}</span>
-                        <img width="180" height="120" src={props.file} className={dataClass} />
-                        <img src={image} alt="Info" width="250" height="200" />
-                    </div>
-                </div>
-            </>
-        )
-    }
-    else if (props.type === "video") {
-        dataClass = dataClass + "_file"
-        bubbleClass = bubbleClass + "_file"
-        return (
-            <div className={messageClass}>
-                <div className={bubbleClass} >
-                    <span className="timeStamp">{props.timeStamp.slice(-8)}</span>
-                    <video width="180" height="120" controls className={dataClass}>
-                        <source src={props.file} type="video/mp4" />
-                    </video>
-                    <img src={image} alt="Info" width="250" height="200" />
-                </div>
-            </div>
-        )
-    }
-    else if (props.type === "record") {
-        dataClass = dataClass + "_file"
-        bubbleClass = bubbleClass + "_file"
-        return (
-            <div className={messageClass}>
-                <div className={bubbleClass} >
-                    <span className="timeStamp">{props.timeStamp.slice(-8)}</span>
-                    <audio id="audio" controls className={[dataClass, "record"].join(" ")} width="100" height="50">
-                        <source src={props.file} type="audio/mp3" />
-                    </audio>
-                    <img src={image} alt="Info" width="310" height="100" />
-                </div>
-            </div>
-        )
-    }
+        ) 
 }
 
-function AddFileButton(props) {
-    const [modalShow, setModalShow] = React.useState(false);
-    const [alertModalShow, setAlertModalShow] = useState(false);
-    const { activeUser, setActiveUser } = useContext(ActiveUserContext);
-    const handleClick = () => {
-        // Edge case in which there isn't a selected contact.
-        if (activeUser === "") {
-            setAlertModalShow(true);
-        }
-        else {
-            setModalShow(true)
-        }
-    }
-    var icon = props.type + "Icon.png";
-    return (
-        <>
-            <Button variant="success" onClick={handleClick}>
-                <img src={process.env.PUBLIC_URL + '/' + icon} height="35" width="35" alt={props.type} />
-            </Button>
-            <AddFileModal
-                show={modalShow}
-                onHide={() => setModalShow(false)}
-                type={props.type} />
-            <AlertModal showModal={alertModalShow} setShowModal={setAlertModalShow} />
-        </>
-    );
-}
 
-function RecordAudioButton() {
-    const [modalShow, setModalShow] = useState(false);
-    const [alertModalShow, setAlertModalShow] = useState(false);
-    const { forceUpdate, setForceUpdate } = useContext(forceUpdateContext);
-    const { activeUser, setActiveUser } = useContext(ActiveUserContext);
-    const handleClick = () => {
-        // Edge case in which there isn't a selected contact.
-        if (activeUser === "") {
-            setAlertModalShow(true);
-        }
-        else {
-            setModalShow(true)
-        }
-    }
-    const update = (e) => {
-        setForceUpdate(new Date().toLocaleString() + "" + getRandomNum());
-    }
-    return (
-        <>
-            <Button class="btn btn-outline-success" variant="success" onClick={handleClick}>
-                <img src={process.env.PUBLIC_URL + '/audioIcon.png'} height="35" width="35" alt="Record" />
-            </Button>
-            <RecordAudioModal
-                show={modalShow}
-                onHide={() => setModalShow(false)}
-                onExited={update}
-            />
-            <AlertModal showModal={alertModalShow} setShowModal={setAlertModalShow} />
 
-        </>
-    );
-}
+
 function getRandomNum() {
     var fromRang = 1;
     var toRange = 1000;
