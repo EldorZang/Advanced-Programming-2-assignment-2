@@ -38,6 +38,18 @@ public class ApiController : ControllerBase
         }
         return Ok();
     }
+    [HttpPost("login")]
+    public IActionResult Login([FromBody] LoginInput? bodyRequest)
+    {
+        if (bodyRequest == null)
+        {
+            return BadRequest();
+        }
+        if (!usersDb.Login(bodyRequest.id,bodyRequest.password)){
+            return BadRequest();
+        }
+        return Ok();
+    }
     [HttpGet("register/{id}")]
     public IActionResult RegisterNewUser(string id)
     {
@@ -47,6 +59,16 @@ public class ApiController : ControllerBase
             return BadRequest();
         }
         return Ok();
+    }
+    [HttpGet("nickName/{id}")]
+    public IActionResult getNickName(string id)
+    {
+        var result = usersDb.GetNickName(id);
+        if (result == null)
+        {
+            return BadRequest();
+        }
+        return Ok(JsonSerializer.Serialize(result));
     }
     [HttpPost("contacts")]
     public IActionResult AddContact(string? loggedUserId, [FromBody] ContactPostInput? bodyRequest)
@@ -204,4 +226,5 @@ public class ApiController : ControllerBase
         var result = PostMessage(input.from, input.to, postInput);
         return result;
     }
+    
 }

@@ -15,6 +15,8 @@ public class User
         {
             this.contacts = contactsArg;
         }
+
+        this.nickName = nickNameArg;
     }
 
     public bool AddContact(string newContactId, string name, string server)

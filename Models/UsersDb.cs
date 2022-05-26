@@ -5,18 +5,38 @@ namespace WebApplication3;
 public class UsersDb
 {
     private static List<User> _users = new List<User>();
+    private static bool firstInitialize = false;
 
     public UsersDb()
     {
-        AddSampleUsers();
+        if (firstInitialize == false)
+        {
+            AddSampleUsers();
+        }
+
+        firstInitialize = true;
     }
     public void AddSampleUsers()
     {
        _users.Add(new User("alice123", "alice_pass",
-            new  List<Contact> { },"alice"));
+            new  List<Contact> {new Contact("bob123","bob","https://localhost:7024") },"alice"));
      _users.Add(new User("bob123", "bob_pass",
-            new  List<Contact> { },"bob")); 
-        
+            new  List<Contact> { new Contact("alice123","alice","https://localhost:7024")},"bob"));
+     var bob = _users.Find(e => e.id == "bob123");
+     var alice = _users.Find(e => e.id == "alice123");
+     
+     bob.userMessages.Add(new UserMessages("alice123"));
+     alice.userMessages.Add(new UserMessages("bob123"));
+     
+     var bobToAliceMsgs = bob.userMessages.Find(e => e.userId == "alice123");
+     var aliceToBobMsgs = alice.userMessages.Find(e => e.userId == "bob123");
+     
+     bobToAliceMsgs.AddMessage("hi1", true);
+     aliceToBobMsgs.AddMessage("hi1", false);
+     bobToAliceMsgs.AddMessage("hi2", false);
+     aliceToBobMsgs.AddMessage("hi2", true);
+     bobToAliceMsgs.AddMessage("hi3", true);
+     aliceToBobMsgs.AddMessage("hi3", false);
     }
     public List<User> GetUsers()
     {
@@ -128,5 +148,18 @@ public class UsersDb
     public bool IsUserExists(string id)
     {
         return _users.Any(element => element.id == id);
+    }
+
+    public bool Login(string id, string password)
+    {
+        var usr = _users.Find(element => element.id == id);
+        if (usr == null) return false;
+        return usr.password == password;
+    }
+    public string? GetNickName(string id)
+    {
+        var usr = _users.Find(element => element.id == id);
+        if (usr == null) return null;
+        return usr.nickName;
     }
 }

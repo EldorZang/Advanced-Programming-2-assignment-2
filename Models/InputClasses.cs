@@ -33,3 +33,8 @@ public class RegisterInput
     public string nickName { get; set; }
     public string password { get; set; }
 }
+public class LoginInput
+{
+    public string id { get; set; }
+    public string password { get; set; }
+}
