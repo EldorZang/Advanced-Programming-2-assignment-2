@@ -1,10 +1,13 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect,useRef} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import '../../App.css';
 import userdef from '../../userdef.png';
 import bg from './background.png';
+import { serverApiPath, serverPath } from '../../App.js'
 
-export default function RegisterPage({usermap, setUsermap, setCurrent}) {
+export default function RegisterPage({setCurrent}) {
+    const isMounted1 = useRef(false);
+    const isMounted2 = useRef(false);
     const [registerData, setRegisterData] = useState({
         username: '',
         nickname: '',
@@ -17,6 +20,43 @@ export default function RegisterPage({usermap, setUsermap, setCurrent}) {
     const [error, setError] = useState({
         errorList: {}
     });
+    const [isUserExists,setIsUserExists] = useState(false);
+    const [submit,setSubmit] = useState(false);
+    useEffect( () =>{
+        async function fetchData(){
+        if (!isMounted1.current){
+            isMounted1.current = true;
+            return;
+        }
+        var res = await fetch(serverApiPath+'register/' + registerData.username);
+        var output = res.ok;
+        console.log(!output);
+        setIsUserExists(!output)
+    }
+    fetchData();
+    },[registerData.username])
+
+    
+    useEffect( () =>{
+        async function fetchData(){
+        if (!isMounted2.current){
+            isMounted2.current = true;
+            return;
+        }
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: registerData.username,
+                    nickName: registerData.nickname,
+                    password: registerData.password})
+        };
+        var res = await fetch(serverApiPath+'register', requestOptions)
+        setCurrent(registerData.username);
+        navigate('/home');}
+        fetchData();
+    },[submit])
+
+
 
     const navigate = useNavigate();
 
@@ -72,13 +112,14 @@ export default function RegisterPage({usermap, setUsermap, setCurrent}) {
         setRegisterData(newRegisterData);
         validateInfo();
     }
+    
 
     const validateInfo = () => {
         let errors = {};
         let invalid = false;
         // password may contain 8-16 characters: a-z, A-Z, digits and the characters !@#$%^&*-_=+
         var passwordRegex = new RegExp("^(?=.*[a-zA-Z0-9!@#$%^&*.-_=+]).{8,16}");
-        if (usermap.has(registerData.username)) {
+        if (isUserExists) {
             invalid = true;
             errors["username"] = "Username Already Exists.";
         }
@@ -102,27 +143,10 @@ export default function RegisterPage({usermap, setUsermap, setCurrent}) {
             errorList: errors
         });
     }
-
+    
     const submitUser = event => {
         event.preventDefault();
-        let newUser = {};
-        let chatRefs = {};
-        newUser["userName"] = registerData.username;
-        newUser["nickName"] = registerData.nickname;
-        newUser["password"] = registerData.password;
-        if (registerData.photo !== null) {
-            newUser["profile"] = registerData.photo;
-        } else {
-            console.log(userdef)
-            newUser["profile"] = userdef;
-        }
-       // newUser["chats"] = chatRefs;
-        newUser["friends"] = [];
-        let newMap = usermap;
-        newMap.set(registerData.username, newUser);
-        setUsermap(newMap);
-        setCurrent(registerData.username);
-        navigate('/home');
+        setSubmit(true);
     }
 
     return (

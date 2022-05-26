@@ -1,19 +1,35 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import bg from './background.png';
+import { serverApiPath, serverPath } from '../../App.js'
 
 import '../../App.css';
 
-export default function LoginPage({usermap, setCurrent}) {
+export default function LoginPage({setCurrent}) {
     const [loginData, setLoginData] = useState({
         username: '',
         password: '',
-        valid: false
     });
+    const [valid,setValid] = useState(false);
 
     const [error, setError] = useState({
         errorList: {}
     });
+    const [inputChange,setInputChange] = useState(0);
+
+    useEffect(() =>{
+        async function fetchData(){
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: loginData.username,
+                                    password: loginData.password})
+        };
+        var res = await fetch(serverApiPath+'login', requestOptions);
+       setValid(res.ok);}
+       fetchData();
+    },[loginData.username,loginData.password])
+
 
 
     const navigate = useNavigate();
@@ -22,7 +38,6 @@ export default function LoginPage({usermap, setCurrent}) {
         setLoginData({
             username: event.target.value,
             password: loginData.password,
-            valid: loginData.valid
         });
     }
 
@@ -30,23 +45,13 @@ export default function LoginPage({usermap, setCurrent}) {
         setLoginData({
             username: loginData.username,
             password: event.target.value,
-            valid: loginData.valid
         });
     }
 
-    const setValid = (validity) => {
-        setLoginData({
-            username: loginData.username,
-            password: loginData.password,
-            valid: validity
-        });
-    }
 
     const validateInfo = () => {
         let errors = {};
-        let isvalid = usermap.has(loginData.username) && usermap.get(loginData.username).password === loginData.password;
-        setValid(isvalid);
-        if ((!isvalid) && loginData.username !== '' && loginData.password !== '') {
+         if(!valid){
             errors["invalid"] = "Invalid Information.";
         }
         setError({
@@ -77,7 +82,7 @@ export default function LoginPage({usermap, setCurrent}) {
                     <p>
                     <Link to= '/home'>
                         <button id="submit-btn" type="submit"
-                        disabled={!loginData.valid}
+                        disabled={!valid}
                         onClick={() => setCurrent(loginData.username)}>Login</button>
                         </Link>
                         <div className="text-danger">{error.errorList["invalid"]}</div>
@@ -90,7 +95,7 @@ export default function LoginPage({usermap, setCurrent}) {
             </div>
         </body>
     )
-}
+    }
 
 
 const background = {
