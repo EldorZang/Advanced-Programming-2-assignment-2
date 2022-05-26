@@ -7,8 +7,8 @@ import Tab from 'react-bootstrap/Tab'
 import Nav from 'react-bootstrap/Nav'
 import Form from 'react-bootstrap/Form'
 
-import { MessagesInfo, UsersInfo } from './databaseArrs'
-import { AlertModal, RecordAudioModal, AddContactModal, AddFileModal } from './ChatPageModals.js'
+import { AlertModal, AddContactModal } from './ChatPageModals.js'
+import { serverApiPath, serverPath } from '../../App.js'
 
 import backgroundImage from './images/chatPageBackground.jpg'
 import sampleProfileImage from './images/sampleProfile.jpg'
@@ -18,165 +18,166 @@ import message_recv from "./images/recv_message.png";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './chatPage.css'
 
+
 // Contexts for accessing global variables without passing each time as props
-export const MessagesContext = createContext(MessagesInfo);
-export const ContactsContext = createContext("");
-export const ContactsInfoContext = createContext("");
-export const ActiveUserContext = createContext("user2");
-export const LoggedUserContext = createContext("user1");
-export const ServerContext = createContext("https://localhost:7024");
+//export const ActiveUserContext = createContext("user2");
+//export const LoggedUserContext = createContext("user1");
 export const forceUpdateContext = createContext("");
 
 // Landing page
-export function Main({ usersMap, loggedUsername }) {
-    
-    // Get a userBar info (name,picture and most recent message).
-    const ResolveUserInfo = async (userName) => {
-        var timeStamp = "";
-        var message = "";
-        var picture = sampleProfileImage;
-        var nickName = "";
-        var msgsArr;
-        var res = await fetch('https://localhost:7024/Api/nickName/' + userName).then(function(response) {
-            return response.json();
-        })
-        .then(function(parsedData) {
-            nickName=parsedData;  
-        })
-        console.log(nickName);
-        var msgs = await fetch('https://localhost:7024/Api/contacts/' +userName + '/messages?loggedUserId='+loggedUser).then(function(response) {
-            return response.json();
-        })
-        .then(function(parsedData) {
-            msgsArr=parsedData;  
-        })
-        console.log(msgsArr);
-        var numMsgs = msgsArr.length;
-        // Edge case in which there is an empty chat.
-        if (numMsgs == 0) {
-            return ({
-                "timeStamp": "",
-                "message": "",
-                "picture": picture,
-                "nickName": nickName,
-                "userName": userName
-            });
-        }
-        
-        var recentMsg = msgsArr[numMsgs-1];
-        var lastdate = recentMsg.created;
-        var last = recentMsg.content
-        return ({
-            "timeStamp": lastdate,
-            "message": last,
-            "picture": picture,
-            "nickName": nickName,
-            "userName": userName
-        });
-    }
+export function Main({ loggedUsername }) {
 
-    const [messagesData, setMessagesData] = useState(MessagesInfo);
+
+    //  const [messagesData, setMessagesData] = useState(MessagesInfo);
     const [activeUser, setActiveUser] = useState("");
     const [loggedUser, setLoggedUser] = useState(loggedUsername);
     const [forceUpdate, setForceUpdate] = useState("temp");
-    const [Server, setServer] = useState("https://localhost:7024");
-    const [contacts,setContacts] = useState([]);
-    const [ContactsNames,setContactsNames] = useState([]);
-    const [updateContacts,setupdateContacts] = useState(false);
-    const [contactsNumber,setContactsNumber] = useState(0);
-    const [chatUsersSideBarInfo,setChatUsersSideBarInfo] = useState([]);
-    useEffect( async ()=>{
+    const [ContactsNames, setContactsNames] = useState([]);
+    const [chatUsersSideBarInfo, setChatUsersSideBarInfo] = useState([]);
+    const [newMessagesData, setNewMessagesData] = useState({});
+    // get contacts names
+    useEffect(async () => {
         var newContactsNames = [];
-        console.log(loggedUser);
-        var res = await fetch('https://localhost:7024/Api/contacts?loggedUserId='+loggedUser).then(function(response) {
+        var res = await fetch(serverApiPath + 'contacts?loggedUserId=' + loggedUsername).then(function (response) {
             return response.json();
         })
-        .then(function(parsedData) {
-            console.log(parsedData);
-            console.log(parsedData.length);
-            if(parsedData.length==contactsNumber){
-                return;
-            }
-            for(var i=0;i<parsedData.length;i++){
-                newContactsNames = [...newContactsNames,parsedData[i]["id"]];
-            }
-            setContactsNumber(parsedData.length);
-            setContactsNames(newContactsNames);
-        })
-    },[ContactsNames])
+            .then(function (parsedData) {
+                for (var i = 0; i < parsedData.length; i++) {
+                    newContactsNames = [...newContactsNames, parsedData[i]["id"]];
+                }
+                setContactsNames(newContactsNames);
+            })
+    }, [])
     // Get sidebar data.
-    console.log(ContactsNames);
+    useEffect(async () => {
+        var newChatUsersSideBarInfo = [];
+        for (var j = 0; j < ContactsNames.length; j++) {
+            var newEntry;
+            var userName = ContactsNames[j];
+            var picture = sampleProfileImage;
+            var nickName = "";
+            var msgsArr;
+            var res = await fetch(serverApiPath + 'nickName/' + userName).then(function (response) {
+                return response.json();
+            })
+                .then(function (parsedData) {
+                    nickName = parsedData;
+                })
 
-  //  var chatUsersSideBarInfo = [];
-  useEffect( async ()=>{
-      console.log("123")
-      var newChatUsersSideBarInfo = [];
-    for(var j=0;j<ContactsNames.length;j++){
-        var newEntry = ResolveUserInfo(ContactsNames[j]);
-        newChatUsersSideBarInfo = [...newChatUsersSideBarInfo, newEntry]
+            var msgs = await fetch(serverApiPath + 'contacts/' + userName + '/messages?loggedUserId=' + loggedUser).then(function (response) {
+                return response.json();
+            })
+                .then(function (parsedData) {
+                    msgsArr = parsedData;
+                })
+            var numMsgs = msgsArr.length;
+            // Edge case in which there is an empty chat.
+            if (numMsgs == 0) {
+                newEntry = {
+                    "timeStamp": "",
+                    "message": "",
+                    "picture": picture,
+                    "nickName": nickName,
+                    "userName": userName
+                };
+            } else {
+                var recentMsg = msgsArr[numMsgs - 1];
+                var lastdate = recentMsg.created;
+                var last = recentMsg.content
+                newEntry = {
+                    "timeStamp": lastdate,
+                    "message": last,
+                    "picture": picture,
+                    "nickName": nickName,
+                    "userName": userName
+                };
+            }
+            newChatUsersSideBarInfo = [...newChatUsersSideBarInfo, newEntry]
+        }
+        setChatUsersSideBarInfo(newChatUsersSideBarInfo);
+    }, [ContactsNames])
+    // get msgs data
+    useEffect(async () => {
+        var msgData = {};
+        for (var k = 0; k < ContactsNames.length; k++) {
+            var currContact = ContactsNames[k];
+            console.log(ContactsNames);
+            var res = await fetch(serverApiPath + 'contacts/' + currContact + '/messages?loggedUserId=' + loggedUser).then(function (response) {
+                return response.json();
+            })
+                .then(function (parsedData) {
+                    msgData[currContact] = parsedData;
+                })
+        }
+        setNewMessagesData(msgData);
+    }, [ContactsNames])
+    const [nickName, setNickName] = useState(" ");
+    // get nickname of logged user
+    useEffect(async () => {
+        var res = await fetch(serverApiPath + 'nickName/' + loggedUser).then(function (response) {
+            return response.json();
+        })
+            .then(function (parsedData) {
+                setNickName(parsedData);
+            })
+    }, [])
+
+
+    const updateContactsInfo = (value) => {
+        setChatUsersSideBarInfo(value);
     }
-    setChatUsersSideBarInfo(newChatUsersSideBarInfo);
-    console.log("1423")
-    },[ContactsNames])
-
-
-    console.log(chatUsersSideBarInfo);
+    const updateActiveUser = (value) => {
+        setActiveUser(value);
+    }
     return (
         <forceUpdateContext.Provider value={{ forceUpdate, setForceUpdate }}>
-            <ContactsInfoContext.Provider value={{chatUsersSideBarInfo,setChatUsersSideBarInfo}}>
-            <ServerContext.Provider value={{Server,setServer}}>
-                <MessagesContext.Provider value={{ messagesData, setMessagesData }}>
-                    <ContactsContext.Provider value={{ contacts, setContacts }}>
-                        <ActiveUserContext.Provider value={{ activeUser, setActiveUser }}>
-                            <LoggedUserContext.Provider value={{ loggedUser, setLoggedUser }}>
-                                <div className="background" style={{ backgroundImage: `url(${backgroundImage}` }}>
-                                <ChatPage />
-                                </div>
-                            </LoggedUserContext.Provider>
-                        </ActiveUserContext.Provider>
-                    </ContactsContext.Provider>
-                </MessagesContext.Provider>
-                </ServerContext.Provider>
-                </ContactsInfoContext.Provider>
+                    <div className="background" style={{ backgroundImage: `url(${backgroundImage}` }}>
+                        <ChatPage contactsInfo={chatUsersSideBarInfo} updateContactsInfo={updateContactsInfo}
+                        loggedUser={loggedUser} activeUser={activeUser} updateActiveUser={updateActiveUser}
+                        nickName={nickName} messagesData={newMessagesData} />
+                    </div>
         </forceUpdateContext.Provider>)
 }
 
 
-export function ChatPage() {
+export function ChatPage(props) {
     const { forceUpdate, setForceUpdate } = useContext(forceUpdateContext);
-    const { messagesData, setMessagesData } = useContext(MessagesContext);
-    const { contacts, setContacts } = useContext(ContactsContext);
-    const { activeUser, setActiveUser } = useContext(ActiveUserContext);
-    const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);
     const [textInput, setTextInput] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [submit, setSubmit] = useState(false);
-
-    useEffect(async ()=>{
-        if(submit == false){
+    var loggedUser = props.loggedUser;
+    var activeUser = props.activeUser;
+    useEffect(async () => {
+        if (submit == false) {
             return;
         }
         // Add the message in the sender server.
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: textInput})
+            body: JSON.stringify({ content: textInput })
         };
-        var res = await fetch('https://localhost:7024/Api/contacts/'+activeUser+'/messages?loggedUserId='+loggedUser, requestOptions);
+        var res = await fetch(serverApiPath + 'contacts/' + activeUser + '/messages?loggedUserId=' + loggedUser, requestOptions);
 
         // Add the message in the reciver server.
-        // get reciver server
-        var recvServer = await fetch('https://localhost:7024/Api/contacts/'+activeUser+'?loggedUserId='+loggedUser);
-        recvServer = recvServer.json()["server"];
+        var recvServer;
+        var res1 = await fetch(serverApiPath + 'contacts/' + activeUser + '?loggedUserId=' + loggedUser).then(function (response) {
+            return response.json();
+        })
+            .then(function (parsedData) {
+                recvServer = parsedData.server;
+            })
         const requestOptionsTransfer = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: textInput})
+            body: JSON.stringify({ from: loggedUser,
+                to: activeUser,
+                content: textInput })
         };
-        var res = await fetch(recvServer+'/Api/transfer', requestOptionsTransfer);
+        var res = await fetch(recvServer + '/api/transfer', requestOptionsTransfer);
         setTextInput("");
         setSubmit(false);
-    },[submit])
+    }, [submit])
 
 
     const handleMessageInputChange = (e) => {
@@ -194,10 +195,11 @@ export function ChatPage() {
     return (
         <Container >
             <Row>
-                <UserInfo />
+                <UserInfo nickName={props.nickName} loggedUser={loggedUser} />
             </Row>
             <Row className="row g-0">
-                <Col ><ChatsNavigation /></Col>
+                <Col ><ChatsNavigation contactsInfo={props.contactsInfo} messagesData={props.messagesData} 
+                        activeUser={activeUser} updateActiveUser={props.updateActiveUser}/></Col>
             </Row>
             <Row>
                 <Col></Col>
@@ -223,29 +225,19 @@ export function ChatPage() {
     )
 }
 
-function UserInfo() {
-    const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);
-    const [nickName, setNickName] = useState(" ");
-    useEffect(async () =>{
-        var res = await fetch('https://localhost:7024/Api/nickName/' + loggedUser).then(function(response) {
-            return response.json();
-        })
-        .then(function(parsedData) {
-            setNickName(parsedData);
-        })
-    },[])
+function UserInfo(props) {
     return (
         <Container >
             <Row className="loggedUserInfo">
                 <Col className="align-left "><img src={sampleProfileImage} alt="loggedUser's picture"
                     width="50" height="50" /></Col>
-                <Col className="align-center d-flex align-items-center justify-content-center"><p>{nickName}</p></Col>
-                <Col className="align-right"><AddContactButton className="addButton" /> </Col>
+                <Col className="align-center d-flex align-items-center justify-content-center"><p>{props.nickName}</p></Col>
+                <Col className="align-right"><AddContactButton className="addButton" loggedUser={props.loggedUser}/> </Col>
             </Row>
         </Container>
     );
 }
-function AddContactButton() {
+function AddContactButton(props) {
     const [modalShow, setModalShow] = useState(false);
     return (
         <>
@@ -255,32 +247,29 @@ function AddContactButton() {
             <AddContactModal
                 show={modalShow}
                 onHide={() => setModalShow(false)}
+                loggedUser={props.loggedUser}
             />
         </>);
 }
-export function ChatsNavigation() {
-    const { messagesData, setMessagesData } = useContext(MessagesContext);
-    const { contacts, setContacts } = useContext(ContactsContext);
-    const {chatUsersSideBarInfo,setChatUsersSideBarInfo} = useContext(ContactsInfoContext)
-    const { activeUser, setActiveUser } = useContext(ActiveUserContext);
-    const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);
+export function ChatsNavigation(props) {
+  //  const { activeUser, setActiveUser } = useContext(ActiveUserContext);
+  //  const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);
     var handleOnSelect = (e) => {
-        setActiveUser(e);
+        props.updateActiveUser(e);
     }
-    console.log(chatUsersSideBarInfo);
     return (
         <Tab.Container id="left-tabs-example"
-            activeKey={activeUser}
+            activeKey={props.activeUser}
             onSelect={handleOnSelect}
-            defaultActiveKey={activeUser}>
+            defaultActiveKey={props.activeUser}>
             <Row>
                 <Col className="contactsBar">
                     <Nav variant="pills" className="flex-column nav nav-tabs">
-                        {chatUsersSideBarInfo.map((chatsInfosData, index) => {
+                        {props.contactsInfo.map((chatsInfosData, index) => {
                             return (
                                 <Nav.Item key={index}>
                                     <Nav.Link eventKey={chatsInfosData.userName}>
-                                        <ChatInfo data={chatsInfosData} />
+                                        <ChatInfo picture={sampleProfileImage} message={chatsInfosData.message} nickName={chatsInfosData.nickName} timestamp={chatsInfosData.timeStamp} />
                                     </Nav.Link>
                                 </Nav.Item>);
                         })}
@@ -288,10 +277,10 @@ export function ChatsNavigation() {
                 </Col>
                 <Col>
                     <Tab.Content>
-                        {chatUsersSideBarInfo.map((chatsInfosData, index) => {
+                        {props.contactsInfo.map((chatsInfosData, index) => {
                             return (
                                 <Tab.Pane key={index} eventKey={chatsInfosData.userName}>
-                                    <MessageWindow data={messagesData[loggedUser][chatsInfosData.userName]} />
+                                    <MessageWindow data={props.messagesData[chatsInfosData.userName]} />
                                 </Tab.Pane>);
                         })}
                     </Tab.Content>
@@ -301,19 +290,16 @@ export function ChatsNavigation() {
     )
 }
 export function ChatInfo(props) {
-    console.log(props);
-    var info =  props.data;
-    var recentMsg =  info.message;
     // Splitting to more than one line if message is too long.
-    if (recentMsg.length > 25) {
+    if (props.message.length > 25) {
         // recentMsg = recentMsg.replace(/(.{25})/g,"$1\n")
     }
     return (
         <Container fluid='true'>
             <Row>
-                <Col ><img src={info.picture} alt="profile2" width="100" height="100" /></Col>
-                <Col>{info.nickName}<br />{recentMsg}</Col>
-                <Col >{info.timeStamp}</Col>
+                <Col ><img src={props.picture} alt="profile2" width="100" height="100" /></Col>
+                <Col>{props.nickName}<br />{props.message}</Col>
+                <Col >{props.timeStamp}</Col>
             </Row>
         </Container>
     )
@@ -333,7 +319,7 @@ export function MessageWindow(props) {
                 {msgs.map((messageData, index) => {
                     return (
                         <Row key={index}>
-                            <Message data={messageData.data} recieved={messageData.recieved} timeStamp={messageData.timeStamp} />
+                            <Message data={messageData.content} recieved={!messageData.sent} timeStamp={messageData.created} />
                         </Row>
                     );
                 })}
@@ -362,36 +348,36 @@ export function Message(props) {
         messageClass = "sent_message";
     }
 
-        dataClass = dataClass + "_text"
-        // Adjusting text balloon height.
-        var numberOfLines = Math.floor(props.data.length / 35) + 1;
-        if (props.data.length % 35 > 0) {
-            numberOfLines = numberOfLines + 1;
-        }
-        if (numberOfLines == 1) {
-            bubbleHeight = 50;
-        }
-        else {
-            bubbleHeight = 30 * numberOfLines;
-        }
-        var msgText = props.data + " \n " + props.timeStamp.slice(-8);
-        // Adjusting text balloon width.
+    dataClass = dataClass + "_text"
+    // Adjusting text balloon height.
+    var numberOfLines = Math.floor(props.data.length / 35) + 1;
+    if (props.data.length % 35 > 0) {
+        numberOfLines = numberOfLines + 1;
+    }
+    if (numberOfLines == 1) {
+        bubbleHeight = 50;
+    }
+    else {
+        bubbleHeight = 30 * numberOfLines;
+    }
+    var msgText = props.data + " \n " + props.timeStamp.slice(-25);
+    // Adjusting text balloon width.
 
-        if (numberOfLines > 2) {
-            bubbleWidth = 10 * 35 + 15
-        }
-        else {
-            // 8 chars is the timeStamp, and 11 is the number of pixels per char.
-            bubbleWidth = Math.max(11 * props.data.length, 11 * 8);
-        }
-        return (
-            <div className={messageClass}>
-                <div className={bubbleClass}>
-                    <p className={[dataClass, "wraplines"].join(' ')}>{msgText}</p>
-                    <img src={image} alt="Info" width={bubbleWidth} height={bubbleHeight} />
-                </div>
+    if (numberOfLines > 2) {
+        bubbleWidth = 10 * 35 + 15
+    }
+    else {
+        // 25 chars is the timeStamp, and 11 is the number of pixels per char.
+        bubbleWidth = Math.max(11 * props.data.length, 11 * 25);
+    }
+    return (
+        <div className={messageClass}>
+            <div className={bubbleClass}>
+                <p className={[dataClass, "wraplines"].join(' ')}>{msgText}</p>
+                <img src={image} alt="Info" width={bubbleWidth} height={bubbleHeight} />
             </div>
-        ) 
+        </div>
+    )
 }
 
 

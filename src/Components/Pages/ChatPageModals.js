@@ -3,8 +3,8 @@ import React, { useState, useContext, useEffect,useRef } from 'react';
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 
-import { MessagesContext, ContactsContext, ActiveUserContext, LoggedUserContext, forceUpdateContext,ServerContext } from './ChatPageComponents.js'
-
+import {ActiveUserContext, LoggedUserContext, forceUpdateContext} from './ChatPageComponents.js'
+import { serverApiPath, serverPath } from '../../App.js'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './chatPage.css'
 
@@ -29,13 +29,12 @@ export function AlertModal(props) {
 
 export function AddContactModal(props) {
     const isMounted = useRef(false);
-    const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);
-    const { apiServer, SetApiServer } = useContext(ServerContext);
     const [formId, setFormId] = useState("");
     const [formNickName, setFormNickName] = useState("");
     const [formServer, setFormServer] = useState("");
     const [submit, setSubmit] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    var loggedUser = props.loggedUser;
     useEffect(async () =>{
         if (!isMounted.current){
             isMounted.current = true;
@@ -44,7 +43,7 @@ export function AddContactModal(props) {
         if(submit == false){
             return;
         }
-        console.log("5");
+        // add to current server
         var requestOptionsCurrServer = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -52,21 +51,23 @@ export function AddContactModal(props) {
                                     name: formNickName,
                                     server: formServer})
         };
-        var addToCurrServer = await fetch(apiServer+'/Api/contacts?loggedUserId='+loggedUser, requestOptionsCurrServer);
+        var addToCurrServer = await fetch(serverApiPath+'contacts?loggedUserId='+loggedUser, requestOptionsCurrServer);
+        // add to contact's server (with invite)
         var requestOptionsInvite = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({  from: loggedUser,
-                                    server: apiServer,
-                                    to: formId
+                                    to: formId,
+                                    server: serverPath
                                     })
         };
-        var inviteToContactServer = await fetch(formServer+'/Api/invitations', requestOptionsInvite);
+        var inviteToContactServer = await fetch(formServer+'/api/invitations', requestOptionsInvite);
         setFormId("");
         setFormNickName("");
         setFormServer("");
         setSubmitted(true);
     },[submit])
+    // call after submit complete
     useEffect(()=>{
         if(submitted == true){
             setSubmit(false);

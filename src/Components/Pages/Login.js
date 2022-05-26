@@ -1,10 +1,11 @@
 import React, {useState,useEffect} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import bg from './background.png';
+import { serverApiPath, serverPath } from '../../App.js'
 
 import '../../App.css';
 
-export default function LoginPage({usermap, setCurrent}) {
+export default function LoginPage({setCurrent}) {
     const [loginData, setLoginData] = useState({
         username: '',
         password: '',
@@ -23,7 +24,7 @@ export default function LoginPage({usermap, setCurrent}) {
             body: JSON.stringify({ id: loginData.username,
                                     password: loginData.password})
         };
-        var res = await fetch('https://localhost:7024/Api/login', requestOptions);
+        var res = await fetch(serverApiPath+'login', requestOptions);
        setValid(res.ok);
     },[loginData.username,loginData.password])
 
@@ -48,9 +49,6 @@ export default function LoginPage({usermap, setCurrent}) {
 
     const validateInfo = () => {
         let errors = {};
-        let isvalid = usermap.has(loginData.username) && usermap.get(loginData.username).password === loginData.password;
-     //   setValid(isvalid);
-     //   if ((!isvalid) && loginData.username !== '' && loginData.password !== '') {
          if(!valid){
             errors["invalid"] = "Invalid Information.";
         }

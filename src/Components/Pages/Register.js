@@ -3,8 +3,9 @@ import {Link, useNavigate} from 'react-router-dom';
 import '../../App.css';
 import userdef from '../../userdef.png';
 import bg from './background.png';
+import { serverApiPath, serverPath } from '../../App.js'
 
-export default function RegisterPage({usermap, setUsermap, setCurrent}) {
+export default function RegisterPage({setCurrent}) {
     const isMounted1 = useRef(false);
     const isMounted2 = useRef(false);
     const [registerData, setRegisterData] = useState({
@@ -26,7 +27,7 @@ export default function RegisterPage({usermap, setUsermap, setCurrent}) {
             isMounted1.current = true;
             return;
         }
-        var res = await fetch('https://localhost:7024/Api/register/' + registerData.username);
+        var res = await fetch(serverApiPath+'register/' + registerData.username);
         var output = res.ok;
         console.log(!output);
         setIsUserExists(!output)
@@ -46,7 +47,8 @@ export default function RegisterPage({usermap, setUsermap, setCurrent}) {
                     nickName: registerData.nickname,
                     password: registerData.password})
         };
-        var res = await fetch('https://localhost:7024/Api/register', requestOptions)
+        var res = await fetch(serverApiPath+'register', requestOptions)
+        setCurrent(registerData.username);
         navigate('/home');
     },[submit])
 
@@ -140,27 +142,7 @@ export default function RegisterPage({usermap, setUsermap, setCurrent}) {
     
     const submitUser = event => {
         event.preventDefault();
-        
-        let newUser = {};
-        let chatRefs = {};
-        newUser["userName"] = registerData.username;
-        newUser["nickName"] = registerData.nickname;
-        newUser["password"] = registerData.password;
-        if (registerData.photo !== null) {
-            newUser["profile"] = registerData.photo;
-        } else {
-            console.log(userdef)
-            newUser["profile"] = userdef;
-        }
-       // newUser["chats"] = chatRefs;
-        newUser["friends"] = [];
-        let newMap = usermap;
-        newMap.set(registerData.username, newUser);
-        setUsermap(newMap);
-        setCurrent(registerData.username);
-        console.log("1");
         setSubmit(true);
-        
     }
 
     return (
