@@ -19,12 +19,13 @@ public class User
         this.nickName = nickNameArg;
     }
 
-    public bool AddContact(string newContactId, string name, string server)
+    public Contact? AddContact(string newContactId, string name, string server)
     {
-        if (contacts.Any(e => e.id == newContactId)) return false;
-        contacts.Add(new Contact(newContactId,name,server));
+        if (contacts.Any(e => e.id == newContactId)) return null;
+        var newContact = new Contact(newContactId, name, server);
+        contacts.Add(newContact);
         userMessages.Add(new UserMessages(newContactId));
-        return true;
+        return newContact;
     }
 
 

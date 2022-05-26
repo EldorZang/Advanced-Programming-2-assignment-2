@@ -50,13 +50,13 @@ public class UsersDb
         return requestedUser.contacts;
     }
     
-    public bool AddContact(string loggedUserID, string newContact, string newName, string server)
+    public Contact? AddContact(string loggedUserID, string newContact, string newName, string server)
     {
         var loggedUser = _users.Find( element => element.id == loggedUserID);
-        if (loggedUser == null) return false;
-        if (loggedUser.contacts.Any(e => e.id == newContact)) return false;
-        loggedUser.AddContact(newContact, newName, server);
-        return true;
+        if (loggedUser == null) return null;
+        if (loggedUser.contacts.Any(e => e.id == newContact)) return null;
+        var newContactObj = loggedUser.AddContact(newContact, newName, server);
+        return newContactObj;
     }
 
     public bool AddNewUser(string id, string nickName, string password)
@@ -110,14 +110,23 @@ public class UsersDb
         return user2Messages.messages.ToArray();
     }
 
-    public bool AddMessage(string user1, string user2, string content)
+    public Message? AddMessage(string user1, string user2, string content)
     {
         User? user = _users.Find(element => element.id == user1);
-        if (user == null) return false;
+        if (user == null) return null;
         var user2Messages = user.userMessages.Find(e => e.userId == user2);
-        if (user2Messages == null) return false;
-        user2Messages.AddMessage(content, true);
-        return true;
+        if (user2Messages == null) return null;
+        var output = user2Messages.AddMessage(content, true);
+        return output;
+    }
+    public Message? AddMessage(string user1, string user2,string content, bool sent)
+    {
+        User? user = _users.Find(element => element.id == user1);
+        if (user == null) return null;
+        var user2Messages = user.userMessages.Find(e => e.userId == user2);
+        if (user2Messages == null) return null;
+        var output = user2Messages.AddMessage(content, sent);
+        return output;
     }
 
     public Message? GetMessageById(string loggedUser, string user2,int msgId)

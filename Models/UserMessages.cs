@@ -13,11 +13,12 @@ public class UserMessages
         this.messages = new List<Message>();
     }
 
-    public bool AddMessage(string msgContent, bool msgSent)
+    public Message AddMessage(string msgContent, bool msgSent)
     {
         this.msgLength++;
-        messages.Add(new Message(msgContent,msgLength,msgSent));
-        return true;
+        var msg = new Message(msgContent, msgLength, msgSent);
+        messages.Add(msg);
+        return msg;
     }
     public bool DeleteMessage(int msgId)
     {
