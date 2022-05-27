@@ -19,7 +19,7 @@ linda123 | Linda | linda_pass | bob123
 frank123 | Frank | frank_pass | bob123
 
 # Running
-Creating Servers from git files:
+Creating Servers from git files: 
 React Server:
 1. Create a project using the template ASP.NET CORE with React.js and call it ReactServer.
 2. Copy public and src folders from git to project/ClientApp folder (overwrite new files).
