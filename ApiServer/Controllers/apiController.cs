@@ -8,6 +8,7 @@ using ApiServer.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using System.Diagnostics.CodeAnalysis;
 using ApiServer.Hubs.Clients;
+using ApiServer.Services;
 
 namespace ApiServer.Controllers;
 
@@ -16,7 +17,7 @@ namespace ApiServer.Controllers;
 public class apiController : ControllerBase
 {
     private string serverPath = "https://localhost:7127";
-    private UsersDb usersDb = new UsersDb();
+    private readonly UsersDBService usersDbService = new UsersDBService();
     private readonly IHubContext<DataBaseHub,IDataBaseClient> _messageHub;
     public apiController(IHubContext<DataBaseHub, IDataBaseClient> messageHub)
     {
@@ -29,7 +30,7 @@ public class apiController : ControllerBase
         {
             return BadRequest();
         }
-        var contacts = usersDb.GetAllContacts(loggedUserId);
+        var contacts = usersDbService.GetAllContacts(loggedUserId);
         if (contacts == null)
         {
             return NotFound();
@@ -43,7 +44,7 @@ public class apiController : ControllerBase
         {
             return BadRequest();
         }
-        if (!usersDb.AddNewUser(bodyRequest.id,bodyRequest.nickName,bodyRequest.password)){
+        if (!usersDbService.AddNewUser(bodyRequest.id,bodyRequest.nickName,bodyRequest.password)){
             return BadRequest();
         }
         return Ok();
@@ -55,7 +56,7 @@ public class apiController : ControllerBase
         {
             return BadRequest();
         }
-        if (!usersDb.Login(bodyRequest.id,bodyRequest.password)){
+        if (!usersDbService.Login(bodyRequest.id,bodyRequest.password)){
             return BadRequest();
         }
         return Ok();
@@ -63,7 +64,7 @@ public class apiController : ControllerBase
     [HttpGet("register/{id}")]
     public IActionResult RegisterNewUser(string id)
     {
-        bool result = usersDb.IsUserExists(id);
+        bool result = usersDbService.IsUserExists(id);
         if (result)
         {
             return BadRequest();
@@ -73,7 +74,7 @@ public class apiController : ControllerBase
     [HttpGet("nickName/{id}")]
     public IActionResult getNickName(string id)
     {
-        var result = usersDb.GetNickName(id);
+        var result = usersDbService.GetNickName(id);
         if (result == null)
         {
             return BadRequest();
@@ -88,7 +89,7 @@ public class apiController : ControllerBase
             return BadRequest();
         }
 
-        var newContactObj = usersDb.AddContact(loggedUserId, bodyRequest.id, bodyRequest.name, bodyRequest.server);
+        var newContactObj = usersDbService.AddContact(loggedUserId, bodyRequest.id, bodyRequest.name, bodyRequest.server);
         if (newContactObj == null){
             return NotFound();
         }
@@ -103,7 +104,7 @@ public class apiController : ControllerBase
         {
             return BadRequest();
         }
-        Contact? output = usersDb.GetOneContact(loggedUserId, id);
+        Contact? output = usersDbService.GetOneContact(loggedUserId, id);
         if (output == null)
         {
             return NotFound();
@@ -117,7 +118,7 @@ public class apiController : ControllerBase
         {
             return BadRequest();
         }
-        if (!usersDb.UpdateContactNameServer(loggedUserId,id,input.name,input.server))
+        if (!usersDbService.UpdateContactNameServer(loggedUserId,id,input.name,input.server))
         {
             return NotFound();
         }
@@ -131,7 +132,7 @@ public class apiController : ControllerBase
         {
             return BadRequest();
         }
-        if (!usersDb.DeleteContact(loggedUserId,id))
+        if (!usersDbService.DeleteContact(loggedUserId,id))
         {
             return NotFound();
         }
@@ -146,7 +147,7 @@ public class apiController : ControllerBase
         {
             return BadRequest();
         }
-        var output = usersDb.GetMessages(loggedUserId,id);
+        var output = usersDbService.GetMessages(loggedUserId,id);
         if (output == null)
         {
             return NotFound();
@@ -160,8 +161,8 @@ public class apiController : ControllerBase
         {
             return BadRequest();
         }
-        var output = usersDb.GetMessages(loggedUserId,id);
-        var newMsgObj = usersDb.AddMessage(loggedUserId, id, input.content);
+        var output = usersDbService.GetMessages(loggedUserId,id);
+        var newMsgObj = usersDbService.AddMessage(loggedUserId, id, input.content);
         if (newMsgObj == null)
         {
             return NotFound();
@@ -179,7 +180,7 @@ public class apiController : ControllerBase
             return BadRequest();
         }
 
-        var output = usersDb.GetMessageById(loggedUserId, id, msgId);
+        var output = usersDbService.GetMessageById(loggedUserId, id, msgId);
         if (output == null)
         {
             return NotFound();
@@ -195,7 +196,7 @@ public class apiController : ControllerBase
             return BadRequest();
         }
         string content = requestBody.content;
-        if (!usersDb.UpdateMessageContentById(loggedUserId,id,msgId,content))
+        if (!usersDbService.UpdateMessageContentById(loggedUserId,id,msgId,content))
         {
             return NotFound();
         }
@@ -210,7 +211,7 @@ public class apiController : ControllerBase
         {
             return BadRequest();
         }
-        if (!usersDb.DeleteMessageById(loggedUserId,id,msgId))
+        if (!usersDbService.DeleteMessageById(loggedUserId,id,msgId))
         {
             return NotFound();
         }
@@ -241,7 +242,7 @@ public class apiController : ControllerBase
         //post message - content
         var postInput = new MessageInput();
         postInput.content = input.content;
-        var msgObj = usersDb.AddMessage(input.to, input.from, input.content, false);
+        var msgObj = usersDbService.AddMessage(input.to, input.from, input.content, false);
         if (msgObj == null)
         {
             return BadRequest();
