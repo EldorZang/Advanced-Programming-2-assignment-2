@@ -33,8 +33,8 @@ Api Server:
 4. Copy Models, Hubs and Controllers folder from git to project's folder (overwrite new files).
 5. Copy program.cs file to project's folder.
 8. Check server address WITHOUT TRAILING SLASH (usually something like http://localhost:7050) - easiest way is to run the server and check its address.
-9. Open ReactServerProject/ClientApp/src/App.js and change line 9 with new server address.
-10. Open ApiServer/Controller/apiController.cs and change line 18 with new server address.
+9. Open ReactServerProject/ClientApp/src/App.js and change line 9 with new Api server address.
+10. Open ApiServer/Controller/apiController.cs and change line 18 with new Api server address.
 11. Open ApiServer/Models/UsersDb.cs and change line 21 with new server address.
 
 Ratings Server (Main Server):
@@ -44,7 +44,7 @@ Ratings Server (Main Server):
    Then, in the server dropdown choose Add new DataBase and choose name advanced-programming-2-backend.Data)
  4. In Nuget console (In VS click Tools->NuGet Package Manager->Package Manager Console) enter:
 `update-database`
- 5. Open advanced-programming-2-backend/Views/Shared/\_Layout.cshtml and change line 23 with the new server address found earlier.
+ 5. Open advanced-programming-2-backend/Views/Shared/\_Layout.cshtml and change line 23 with the React Server.
 
 # Notes
 1. In Google Chrome (in opposed to Firefox) forms aren't automatically out-focused when disabled buttons are clicked. Therefore using Google Chrome browser requires clicking the background (or any other not-focused element) before clicking the login button.
