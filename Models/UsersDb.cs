@@ -19,9 +19,9 @@ public class UsersDb
     public void AddSampleUsers()
     {
        _users.Add(new User("alice123", "alice_pass",
-            new  List<Contact> {new Contact("bob123","bob","https://localhost:7024") },"alice"));
+            new  List<Contact> {new Contact("bob123","bob","https://localhost:7030") },"alice"));
      _users.Add(new User("bob123", "bob_pass",
-            new  List<Contact> { new Contact("alice123","alice","https://localhost:7024")},"bob"));
+            new  List<Contact> { new Contact("alice123","alice","https://localhost:7030")},"bob"));
      var bob = _users.Find(e => e.id == "bob123");
      var alice = _users.Find(e => e.id == "alice123");
      

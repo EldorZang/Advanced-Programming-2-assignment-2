@@ -6,7 +6,7 @@ import LoginPage from './Components/Pages/Login'
 import RegisterPage from './Components/Pages/Register'
 import HomePage from './Components/Pages/Home';
 
-export const serverPath = "https://localhost:7024";
+export const serverPath = "https://localhost:7030";
 export const serverApiPath = serverPath + '/api/';
 
 function App() {

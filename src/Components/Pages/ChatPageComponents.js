@@ -1,4 +1,5 @@
 import React, { useRef, useState, useContext, createContext, useEffect } from 'react';
+import { HubConnectionBuilder } from '@microsoft/signalr';
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row';
@@ -35,8 +36,41 @@ export function Main({ loggedUsername }) {
     const [ContactsNames, setContactsNames] = useState([]);
     const [chatUsersSideBarInfo, setChatUsersSideBarInfo] = useState([]);
     const [newMessagesData, setNewMessagesData] = useState({});
+    const [updateDataBase,setUpdateDataBase] = useState(true);
+
+
+    useEffect(() => {
+        const connection = new HubConnectionBuilder()
+            .withUrl(serverPath +'/hubs/database',
+ 		{withCredentials: (false)}
+		)
+            .withAutomaticReconnect()
+            .build();
+
+        connection.start()
+            .then(result => {
+                console.log('Connected!');
+                connection.on('ReceiveUpdate', value => {
+                 setUpdateDataBase(true);
+                });
+            })
+            .catch(e => console.log('Connection failed: ', e));
+    }, []);
+
+
+
+
+
+
+
+
+
+
+
     // get contacts names
-    useEffect(async () => {
+    useEffect( () => {
+        async function fetchData(){
+	if(updateDataBase == false) return;
         var newContactsNames = [];
         var res = await fetch(serverApiPath + 'contacts?loggedUserId=' + loggedUsername).then(function (response) {
             return response.json();
@@ -47,9 +81,13 @@ export function Main({ loggedUsername }) {
                 }
                 setContactsNames(newContactsNames);
             })
-    }, [])
+		setUpdateDataBase(false); 
+        }
+        fetchData();
+    }, [updateDataBase])
     // Get sidebar data.
-    useEffect(async () => {
+    useEffect( () => {
+        async function fetchData(){
         var newChatUsersSideBarInfo = [];
         for (var j = 0; j < ContactsNames.length; j++) {
             var newEntry;
@@ -95,9 +133,12 @@ export function Main({ loggedUsername }) {
             newChatUsersSideBarInfo = [...newChatUsersSideBarInfo, newEntry]
         }
         setChatUsersSideBarInfo(newChatUsersSideBarInfo);
+    }
+    fetchData();
     }, [ContactsNames])
     // get msgs data
-    useEffect(async () => {
+    useEffect( () => {
+        async function fetchData(){
         var msgData = {};
         for (var k = 0; k < ContactsNames.length; k++) {
             var currContact = ContactsNames[k];
@@ -110,16 +151,21 @@ export function Main({ loggedUsername }) {
                 })
         }
         setNewMessagesData(msgData);
+    }
+    fetchData();
     }, [ContactsNames])
     const [nickName, setNickName] = useState(" ");
     // get nickname of logged user
-    useEffect(async () => {
+    useEffect( () => {
+        async function fetchData(){
         var res = await fetch(serverApiPath + 'nickName/' + loggedUser).then(function (response) {
             return response.json();
         })
             .then(function (parsedData) {
                 setNickName(parsedData);
             })
+        }
+        fetchData();
     }, [])
 
 
@@ -147,7 +193,8 @@ export function ChatPage(props) {
     const [submit, setSubmit] = useState(false);
     var loggedUser = props.loggedUser;
     var activeUser = props.activeUser;
-    useEffect(async () => {
+    useEffect( () => {
+        async function fetchData(){
         if (submit == false) {
             return;
         }
@@ -177,6 +224,8 @@ export function ChatPage(props) {
         var res = await fetch(recvServer + '/api/transfer', requestOptionsTransfer);
         setTextInput("");
         setSubmit(false);
+    }
+    fetchData();
     }, [submit])
 
 

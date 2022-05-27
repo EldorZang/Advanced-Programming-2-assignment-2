@@ -22,7 +22,8 @@ export default function RegisterPage({setCurrent}) {
     });
     const [isUserExists,setIsUserExists] = useState(false);
     const [submit,setSubmit] = useState(false);
-    useEffect(async () =>{
+    useEffect( () =>{
+        async function fetchData(){
         if (!isMounted1.current){
             isMounted1.current = true;
             return;
@@ -31,11 +32,13 @@ export default function RegisterPage({setCurrent}) {
         var output = res.ok;
         console.log(!output);
         setIsUserExists(!output)
-
+    }
+    fetchData();
     },[registerData.username])
 
     
-    useEffect(async () =>{
+    useEffect( () =>{
+        async function fetchData(){
         if (!isMounted2.current){
             isMounted2.current = true;
             return;
@@ -49,7 +52,8 @@ export default function RegisterPage({setCurrent}) {
         };
         var res = await fetch(serverApiPath+'register', requestOptions)
         setCurrent(registerData.username);
-        navigate('/home');
+        navigate('/home');}
+        fetchData();
     },[submit])
 
 

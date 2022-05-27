@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication;
+using WebApplication3.Hubs;
+using Microsoft.AspNetCore.SignalR;
+using System.Diagnostics.CodeAnalysis;
+using WebApplication3.Hubs.Clients;
 
 namespace WebApplication3.Controllers;
 
@@ -12,6 +16,11 @@ namespace WebApplication3.Controllers;
 public class apiController : ControllerBase
 {
     private UsersDb usersDb = new UsersDb();
+    private readonly IHubContext<DataBaseHub,IDataBaseClient> _messageHub;
+    public apiController(IHubContext<DataBaseHub, IDataBaseClient> messageHub)
+    {
+        _messageHub = messageHub;
+    }
     [HttpGet("contacts")]
     public IActionResult GetContacts(string? loggedUserId)
     {
@@ -71,7 +80,7 @@ public class apiController : ControllerBase
         return Ok(JsonSerializer.Serialize(result));
     }
     [HttpPost("contacts")]
-    public IActionResult AddContact(string? loggedUserId, [FromBody] ContactPostInput? bodyRequest)
+    public async Task<IActionResult> AddContact(string? loggedUserId, [FromBody] ContactPostInput? bodyRequest)
     {
         if (loggedUserId == null || bodyRequest == null)
         {
@@ -82,6 +91,7 @@ public class apiController : ControllerBase
         if (newContactObj == null){
             return NotFound();
         }
+        await _messageHub.Clients.All.ReceiveUpdate(true);
         return Created("https://localhost:7024/api/contacts/"+bodyRequest.id+"/?loggedUserId="+loggedUserId,newContactObj);
     }
 
@@ -100,7 +110,7 @@ public class apiController : ControllerBase
         return Ok(JsonSerializer.Serialize(output));
     }
     [HttpPut("contacts/{id}")]
-    public IActionResult UpdateContact(string id, string? loggedUserId,[FromBody] ContactPutInput? input)
+    public async Task<IActionResult> UpdateContact(string id, string? loggedUserId,[FromBody] ContactPutInput? input)
     {
         if (loggedUserId == null || input == null)
         {
@@ -110,10 +120,11 @@ public class apiController : ControllerBase
         {
             return NotFound();
         }
+        await _messageHub.Clients.All.ReceiveUpdate(true);
         return NoContent();
     }
     [HttpDelete("contacts/{id}")]
-    public IActionResult DeleteContact(string id, string? loggedUserId)
+    public async Task<IActionResult> DeleteContact(string id, string? loggedUserId)
     {
         if (loggedUserId == null)
         {
@@ -123,6 +134,7 @@ public class apiController : ControllerBase
         {
             return NotFound();
         }
+        await _messageHub.Clients.All.ReceiveUpdate(true);
         return NoContent();
     }
 
@@ -141,7 +153,7 @@ public class apiController : ControllerBase
         return Ok(JsonSerializer.Serialize(output));
     }
     [HttpPost("contacts/{id}/messages")]
-    public IActionResult PostMessage(string id, string? loggedUserId,[FromBody] MessageInput? input)
+    public async Task<IActionResult> PostMessage(string id, string? loggedUserId,[FromBody] MessageInput? input)
     {
         if (loggedUserId == null || input == null)
         {
@@ -153,6 +165,7 @@ public class apiController : ControllerBase
         {
             return NotFound();
         }
+        await _messageHub.Clients.All.ReceiveUpdate(true);
         return Created("https://localhost:7024/api/contacts/"+id+"/messages/"+newMsgObj.id+"?loggedUserId="+loggedUserId,newMsgObj);
     }
 
@@ -173,7 +186,7 @@ public class apiController : ControllerBase
         return Ok(JsonSerializer.Serialize(output));
     }
     [HttpPut("contacts/{id}/messages/{id2}")]
-    public IActionResult UpdateMessageById(string id, string id2, string? loggedUserId, [FromBody] MessageInput? requestBody)
+    public async Task<IActionResult> UpdateMessageById(string id, string id2, string? loggedUserId, [FromBody] MessageInput? requestBody)
     {
         int msgId;
         if (loggedUserId == null ||requestBody==null|| !int.TryParse(id2, out msgId))
@@ -185,10 +198,11 @@ public class apiController : ControllerBase
         {
             return NotFound();
         }
+        await _messageHub.Clients.All.ReceiveUpdate(true);
         return NoContent();
     }
     [HttpDelete("contacts/{id}/messages/{id2}")]
-    public IActionResult DeleteMessageById(string id, string id2, string? loggedUserId)
+    public async Task<IActionResult> DeleteMessageById(string id, string id2, string? loggedUserId)
     {
         int msgId;
         if (loggedUserId == null ||!int.TryParse(id2, out msgId))
@@ -199,10 +213,11 @@ public class apiController : ControllerBase
         {
             return NotFound();
         }
+        await _messageHub.Clients.All.ReceiveUpdate(true);
         return NoContent();
     }
     [HttpPost("invitations")]
-    public IActionResult PostInvitation([FromBody] InvitationInput? input)
+    public async Task<IActionResult> PostInvitation([FromBody] InvitationInput? input)
     {
         if (input == null)
         {
@@ -213,10 +228,10 @@ public class apiController : ControllerBase
         postInput.id = input.from;
         postInput.name = input.from;
         postInput.server = input.server;
-        return AddContact(input.to, postInput);
+        return await AddContact(input.to, postInput);
     }
     [HttpPost("transfer")]
-    public IActionResult PostTransfer([FromBody] TransferInput? input)
+    public async Task<IActionResult> PostTransfer([FromBody] TransferInput? input)
     {
         if (input == null)
         {
@@ -230,6 +245,7 @@ public class apiController : ControllerBase
         {
             return BadRequest();
         }
+        await _messageHub.Clients.All.ReceiveUpdate(true);
         return Created("https://localhost:7024/api/contacts/"+input.from+"/?loggedUserId="+input.to,msgObj);
     }
     

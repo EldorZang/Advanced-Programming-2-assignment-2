@@ -35,7 +35,8 @@ export function AddContactModal(props) {
     const [submit, setSubmit] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     var loggedUser = props.loggedUser;
-    useEffect(async () =>{
+    useEffect( () =>{
+        async function fetchData(){
         if (!isMounted.current){
             isMounted.current = true;
             return;
@@ -66,6 +67,8 @@ export function AddContactModal(props) {
         setFormNickName("");
         setFormServer("");
         setSubmitted(true);
+    }
+    fetchData();
     },[submit])
     // call after submit complete
     useEffect(()=>{

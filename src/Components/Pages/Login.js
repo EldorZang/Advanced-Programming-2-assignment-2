@@ -17,7 +17,8 @@ export default function LoginPage({setCurrent}) {
     });
     const [inputChange,setInputChange] = useState(0);
 
-    useEffect(async () =>{
+    useEffect(() =>{
+        async function fetchData(){
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -25,7 +26,8 @@ export default function LoginPage({setCurrent}) {
                                     password: loginData.password})
         };
         var res = await fetch(serverApiPath+'login', requestOptions);
-       setValid(res.ok);
+       setValid(res.ok);}
+       fetchData();
     },[loginData.username,loginData.password])
 
 
