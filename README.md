@@ -19,7 +19,7 @@ olivia123 | Olivia | olivia_pass | bob123
 
 # Preparing all files
 Creating Servers from git files:  
-React Server:  
+**React Server:**
 1. Create a project using the template ASP.NET CORE with React.js and call it ReactServer.
 2. Copy public and src folders from git to project/ClientApp folder (overwrite new files).
 3. Copy program.cs to project's directory.
@@ -27,17 +27,17 @@ React Server:
 5. Install dependencies (JQuery, Bootstrap, React-Bootstrap  signalr and React-Router):  
 `npm install react-bootstrap bootstrap react-router-dom@6 jquery @microsoft/signalr --save`
 
-Api Server:  
+**Api Server:**  
 1. Create a project using the template ASP.NET CORE Web API and call it ApiServer.
 2. Delete WeatherForecast files from project folder and Controllers folder.
 4. Copy Models, Hubs and Controllers folder from git to project's folder (overwrite new files).
 5. Copy program.cs file to project's folder.
-8. Check server address WITHOUT TRAILING SLASH (usually something like http://localhost:7050) - easiest way is to run the server and check its address.
+8. Check Api Server address **WITHOUT TRAILING SLASH** (usually something like https://localhost:7050) - easiest way is to run the server and check its address.
 9. Open ReactServerProject/ClientApp/src/App.js and change line 9 with new Api server address.
 10. Open ApiServer/Controller/apiController.cs and change line 18 with new Api server address.
 11. Open ApiServer/Models/UsersDb.cs and change line 21 with new server address.
 
-Ratings Server (Main Server):
+**Ratings Server (Main Server):**  
 1. Copy advanced-programming-2-backend.
 3. In the solution, create a new SQL server named (localdb)\MSSQLLocalDB and inside a new database object named advanced-programming-2-backend.Data  
    (In VS: Open View->SQL Server Object Explorer, right click on SQL Server->Add SQL Server, choose from Local menu MSSQLLocalDB and click connect.
@@ -51,7 +51,7 @@ Ratings Server (Main Server):
 1. Navigate to project folder.
 2. Enter to each server folder:
 `dotnet run`
-(Its more preffered to run with VS in case of errrors, but it might be quite heavy to open 3 VS project at once)
+(Its more preffered to run with VS in case of errrors, but it might be quite heavy to open 3 VS projects at once)
 # Notes
 1. In Google Chrome (in opposed to Firefox) forms aren't automatically out-focused when disabled buttons are clicked. Therefore using Google Chrome browser requires clicking the background (or any other not-focused element) before clicking the login button.
 2. The api implements some more neccessary http calls (such as register/login). Please do not manually send those new requests.
