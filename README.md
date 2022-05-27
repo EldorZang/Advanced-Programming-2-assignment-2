@@ -18,16 +18,16 @@ olivia123 | Olivia | olivia_pass | bob123
 linda123 | Linda | linda_pass | bob123
 frank123 | Frank | frank_pass | bob123
 
-# Running
+# Preparing all files
 Creating Servers from git files: 
-React Server:
+React Server:  
 1. Create a project using the template ASP.NET CORE with React.js and call it ReactServer.
 2. Copy public and src folders from git to project/ClientApp folder (overwrite new files).
 3. In console, navigate to project directory.
 4. Install dependencies (JQuery, Bootstrap, React-Bootstrap  signalr and React-Router):  
 `npm install react-bootstrap bootstrap react-router-dom@6 jquery @microsoft/signalr --save`
 
-Api Server:
+Api Server:  
 1. Create a project using the template ASP.NET CORE Web API and call it ApiServer.
 2. Delete WeatherForecast files from project folder and Controllers folder.
 4. Copy Models, Hubs and Controllers folder from git to project's folder (overwrite new files).
@@ -37,6 +37,8 @@ Api Server:
 10. Open ApiServer/Controller/apiController.cs and change line 18 with new server address.
 11. Open ApiServer/Models/UsersDb.cs and change line 21 with new server address.
 
-Ratings Server:
+Ratings Server:  
 
-Please note, that in Google Chrome (in opposed to Firefox) forms aren't automatically out-focused when disabled buttons are clicked. Therefore using Google Chrome browser requires clicking the background (or any other not-focused element) before clicking the login button.
+# Notes
+1. In Google Chrome (in opposed to Firefox) forms aren't automatically out-focused when disabled buttons are clicked. Therefore using Google Chrome browser requires clicking the background (or any other not-focused element) before clicking the login button.
+2. The api implements some more neccessary http calls (such as register/login). Please do not manually send those new requests.
