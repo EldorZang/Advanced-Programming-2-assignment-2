@@ -1,0 +1,208 @@
+.container {
+    max-width: '100%'
+  }
+  .recv_message{
+    Justify-Content: right;
+    text-align: right;
+    display: flex;
+    flex-flow:row wrap;
+  }
+  .recv_message_bubble{
+    position: relative;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sent_message_bubble{
+    position: relative;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .recv_message_bubble_file{
+    position: relative;
+    text-align: center;
+
+    align-items: center;
+    justify-content: center;
+    display: inline-block;
+
+  }
+  .sent_message_bubble_file{
+    position: relative;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+
+  }
+  .recv_message_data_text{
+    display: "flex";
+    position: absolute;
+    text-align: left;
+    padding-left: 10px;
+    vertical-align: middle;
+  }
+  .recv_message_data_file{
+    display: "flex";
+    position: absolute;
+    text-align: left;
+    vertical-align: middle;
+    line-height: 1.2;
+    top: 52px;
+    left: 39px;
+  }
+  .sent_message{
+    Justify-Content: left;
+    text-align: left;
+    display: flex;
+    flex-flow:row wrap;
+  }
+
+  .sent_message_data_text{
+    display: "flex";
+    position: absolute;
+    text-align: left;
+    vertical-align: middle;
+    line-height: 1.2;
+    padding-left: 10px;
+  }
+  .sent_message_data_file{
+    display: "flex";
+    position: absolute;
+    text-align: left;
+    vertical-align: middle;
+    line-height: 1.2;
+    top: 52px;
+    left: 39px;
+  }
+
+.msgTime{
+  display: "flex";
+  position: absolute;
+  align-items: right !important;
+  justify-content: right;
+  text-align: right;
+  vertical-align: middle;
+}
+
+
+
+
+
+  p {
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+ 
+  .btn:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  .messageWindow{
+    overflow-y: auto; 
+    overflow-x: hidden; 
+    height:400px;
+    width: 100%;
+  }
+  .userBar{
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+    text-align: center;
+    
+}
+
+
+.contacts-tabs{
+  height:400px;
+  overflow:auto;
+}
+  .addButton{
+    position: absolute;
+    right: -7px;
+
+  }
+  .background{
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+  }
+.contactsBar{
+  height: 400px;
+  overflow-y: auto;
+}
+  .nav-tabs .nav-link {
+
+    background-color: transparent !important;
+    color: #FFFFFF !important;
+    background-color: #198754 !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+  }
+  
+  .nav-tabs .nav-link.active {
+    border-bottom: solid 4px  rgb(172, 189, 53) !important;
+  }
+  .nav.nav-tabs .nav-link.active {
+    background-color: #009b53 !important;
+}
+.nav.nav-pills .nav-link.active {
+  background-color: #009b53 !important;}
+  .nav-link{
+    color: #FFFFFF !important;
+    background-color: #014123 !important;
+  }
+.recordingModal{
+  text-align: center;
+}
+.noBackGround{
+  background: none !important;
+  border: none;
+}
+.whiteBackGround{
+  background: #FFFFFF !important;
+}
+.noBorder{
+  border: none !important;
+}
+.text-align-right{
+  text-align: right;
+}
+
+.align-left{
+  text-align: left;
+
+}
+.align-right{
+  text-align: right;
+
+}
+.align-center{
+  text-align: center;
+
+}
+.loggedUserInfo{
+  font-Size: 25px;
+  background: #c1a486;
+  vertical-align: middle;
+}
+.wraplines{
+  white-space: pre-line;
+}
+.timeStamp{
+  margin-bottom: 0 !important;
+  display: block;
+  top: 30px;
+position: relative;
+}
+.record{
+  left: 9px !important;
+}
