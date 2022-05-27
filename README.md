@@ -42,9 +42,10 @@ Ratings Server (Main Server):
 3. In the solution, create a new SQL server named (localdb)\MSSQLLocalDB and inside a new database object named advanced-programming-2-backend.Data  
    (In VS: Open View->SQL Server Object Explorer, right click on SQL Server->Add SQL Server, choose from Local menu MSSQLLocalDB and click connect.
    Then, in the server dropdown choose Add new DataBase and choose name advanced-programming-2-backend.Data)
- 4. In Nuget console (In VS click Tools->NuGet Package Manager->Package Manager Console) enter:
+4. Clean build (in VS: click Build->Clean solution)
+5. In Nuget console (In VS click Tools->NuGet Package Manager->Package Manager Console) enter:  
 `update-database`
- 5. Open advanced-programming-2-backend/Views/Shared/\_Layout.cshtml and change line 23 with the React Server.
+6. Open advanced-programming-2-backend/Views/Shared/\_Layout.cshtml and change line 23 with the React Server.
 
 # Notes
 1. In Google Chrome (in opposed to Firefox) forms aren't automatically out-focused when disabled buttons are clicked. Therefore using Google Chrome browser requires clicking the background (or any other not-focused element) before clicking the login button.
