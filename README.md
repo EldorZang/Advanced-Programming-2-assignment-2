@@ -18,7 +18,7 @@ olivia123 | Olivia | olivia_pass | bob123
 
 
 # Preparing all files
-Creating Servers from git files: 
+Creating Servers from git files:  
 React Server:  
 1. Create a project using the template ASP.NET CORE with React.js and call it ReactServer.
 2. Copy public and src folders from git to project/ClientApp folder (overwrite new files).
@@ -42,11 +42,16 @@ Ratings Server (Main Server):
 3. In the solution, create a new SQL server named (localdb)\MSSQLLocalDB and inside a new database object named advanced-programming-2-backend.Data  
    (In VS: Open View->SQL Server Object Explorer, right click on SQL Server->Add SQL Server, choose from Local menu MSSQLLocalDB and click connect.
    Then, in the server dropdown choose Add new DataBase and choose name advanced-programming-2-backend.Data)
-4. Clean build (in VS: click Build->Clean solution)
+4. Install Microsoft.EntityFrameworkCore from NuGet (In VS:Tools->NuGet Package Manager->Mange NuGet packages for solution.
 5. In Nuget console (In VS click Tools->NuGet Package Manager->Package Manager Console) enter:  
 `update-database`
 6. Open advanced-programming-2-backend/Views/Shared/\_Layout.cshtml and change line 23 with the React Server.
 
+# Running
+1. Navigate to project folder.
+2. Enter to each server folder:
+`dotnet run`
+(Its more preffered to run with VS in case of errrors, but it might be quite heavy to open 3 VS project at once)
 # Notes
 1. In Google Chrome (in opposed to Firefox) forms aren't automatically out-focused when disabled buttons are clicked. Therefore using Google Chrome browser requires clicking the background (or any other not-focused element) before clicking the login button.
 2. The api implements some more neccessary http calls (such as register/login). Please do not manually send those new requests.
