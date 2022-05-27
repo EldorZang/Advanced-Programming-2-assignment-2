@@ -5,18 +5,17 @@ Eldor Zang, 315232942
 This project is a messaging platform built with React.  
 Includes: Home, Login, Register and Chat pages.  
 Differences from assignment 1:
-1. Text only messages.
+1. Only text messages.
 2. Due the api lack of pictures support, all users will have a default picutre.
 
 # Existing users:
 User Name | Nick Name | Password | Contacts
 --- | --- | --- | --- |
-bob123 | Bob | bob_pass | alice123, oliver123, olivia123, linda123, frank123
+bob123 | Bob | bob_pass | alice123, oliver123, olivia123
 alice123 | Alice | alice_pass | bob123
 oliver123 | Oliver | oliver_pass | bob123
 olivia123 | Olivia | olivia_pass | bob123
-linda123 | Linda | linda_pass | bob123
-frank123 | Frank | frank_pass | bob123
+
 
 # Preparing all files
 Creating Servers from git files: 
