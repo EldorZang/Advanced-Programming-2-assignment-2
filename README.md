@@ -31,7 +31,7 @@ Creating Servers from git files:
 **Api Server:**  
 1. Create a project using the template ASP.NET CORE Web API and call it ApiServer.
 2. Delete WeatherForecast files from project folder and Controllers folder.
-4. Copy Models, Hubs and Controllers folder from git to project's folder (overwrite new files).
+4. Copy Models, Hubs, Controllers and Services folder from git to project's folder (overwrite new files).
 5. Copy program.cs file to project's folder.
 8. Check Api Server address **WITHOUT TRAILING SLASH** (usually something like https://localhost:7050) - easiest way is to run the server and check its address.
 9. Open ReactServerProject/ClientApp/src/App.js and change line 9 with new Api server address.
