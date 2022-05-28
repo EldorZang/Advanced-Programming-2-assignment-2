@@ -57,3 +57,4 @@ Creating Servers from git files:
 1. In Google Chrome (in opposed to Firefox) forms aren't automatically out-focused when disabled buttons are clicked. Therefore using Google Chrome browser requires clicking the background (or any other not-focused element) before clicking the login button.
 2. The api implements some more neccessary http calls (such as register/login). Please do not manually send those new requests.
 3. The Ratings Server works only in http.
+4. Sometimes entering the React Server initialized url is required to enable SPA proxy (and then redirectng to actual server).
