@@ -50,7 +50,7 @@ Creating Servers from git files:
 
 # Running
 1. Navigate to project folder.
-2. Enter to each server folder:
+2. Enter to each server folder and run:  
 `dotnet run`
 (Alternativly, it is more preffered to run with VS)
 # Notes
