@@ -36,7 +36,7 @@ Creating Servers from git files:
 8. Check Api Server address **WITHOUT TRAILING SLASH** (usually something like https://localhost:7050) - easiest way is to run the server and check its address.
 9. Open ReactServerProject/ClientApp/src/App.js and change line 9 with new Api server address.
 10. Open ApiServer/Controller/apiController.cs and change line 18 with new Api server address.
-11. Open ApiServer/Models/UsersDb.cs and change line 21 with new server address.
+11. Open ApiServer/Models/UsersDb.cs and change line 21 with new Api server address.
 
 **Ratings Server (Main Server):**  
 1. Copy advanced-programming-2-backend.
