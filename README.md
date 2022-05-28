@@ -24,7 +24,7 @@ Creating Servers from git files:
 1. Create a project using the template ASP.NET CORE with React.js and call it ReactServer.
 2. Copy public and src folders from git to project/ClientApp folder (overwrite new files).
 3. Copy program.cs to project's directory.
-4. In console, navigate to project directory.
+4. In console, navigate to project directory (the parent directory of ClientApp folder).
 5. Install dependencies (JQuery, Bootstrap, React-Bootstrap  signalr and React-Router):  
 `npm install react-bootstrap bootstrap react-router-dom@6 jquery @microsoft/signalr --save`
 
