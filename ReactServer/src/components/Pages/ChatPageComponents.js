@@ -319,7 +319,7 @@ export function ChatsNavigation(props) {
                             return (
                                 <Nav.Item key={index}>
                                     <Nav.Link eventKey={chatsInfosData.userName}>
-                                        <ChatInfo picture={sampleProfileImage} message={chatsInfosData.message} nickName={chatsInfosData.nickName} timestamp={chatsInfosData.timeStamp} />
+                                        <ChatInfo picture={sampleProfileImage} message={chatsInfosData.message} nickName={chatsInfosData.nickName} timeStamp={chatsInfosData.timeStamp} />
                                     </Nav.Link>
                                 </Nav.Item>);
                         })}
