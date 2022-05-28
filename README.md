@@ -19,6 +19,7 @@ olivia123 | Olivia | olivia_pass | bob123
 
 # Preparing all files
 Creating Servers from git files:  
+
 **React Server:**
 1. Create a project using the template ASP.NET CORE with React.js and call it ReactServer.
 2. Copy public and src folders from git to project/ClientApp folder (overwrite new files).
@@ -51,7 +52,7 @@ Creating Servers from git files:
 1. Navigate to project folder.
 2. Enter to each server folder:
 `dotnet run`
-(Its more preffered to run with VS in case of errrors, but it might be quite heavy to open 3 VS projects at once)
+(Alternativly, it is more preffered to run with VS)
 # Notes
 1. In Google Chrome (in opposed to Firefox) forms aren't automatically out-focused when disabled buttons are clicked. Therefore using Google Chrome browser requires clicking the background (or any other not-focused element) before clicking the login button.
 2. The api implements some more neccessary http calls (such as register/login). Please do not manually send those new requests.
