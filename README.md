@@ -45,7 +45,7 @@ Creating Servers from git files:
 4. Install Microsoft.EntityFrameworkCore from NuGet (In VS:Tools->NuGet Package Manager->Mange NuGet packages for solution.
 5. In Nuget console (In VS click Tools->NuGet Package Manager->Package Manager Console) enter:  
 `update-database`
-6. Open advanced-programming-2-backend/Views/Shared/\_Layout.cshtml and change line 23 with the React Server.
+6. Open advanced-programming-2-backend/Views/Shared/\_Layout.cshtml and change line 23 with the React Server address (usually something like https://localhost:7050).
 
 # Running
 1. Navigate to project folder.
