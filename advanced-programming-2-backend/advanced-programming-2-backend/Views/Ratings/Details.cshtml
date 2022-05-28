@@ -16,10 +16,10 @@
             <img src="~/Images/starHollow.png" align="middle" />
         }
     </div>
-    <h3>Title:</h3>
-    <h3 style="text-align:center">@Model.Title</h3>
-    <h5 style="text-align:left">Description:</h5>
-    <h5>@Model.Description</h5>
+    <h3  style="text-align:left">Name:</h3>
+    <h3 style="text-align:center">@Model.Name</h3>
+    <h3 style="text-align:left">Description:</h3>
+    <h3 style="text-align:center">@Model.Description</h3>
     <text style="color:antiquewhite; padding:0 0 0 0.3rem">Last edit on @Model.Date</text> |
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit Rating</a> |
     <a asp-action="Delete" asp-route-id="@Model?.Id">Delete Rating</a>
