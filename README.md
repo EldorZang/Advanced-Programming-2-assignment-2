@@ -24,7 +24,7 @@ Creating Servers from git files:
 1. Create a project using the template ASP.NET CORE with React.js and call it ReactServer.
 2. Copy public and src folders from git to project/ClientApp folder (overwrite new files).
 3. Copy program.cs to project's directory.
-4. In console, navigate to project directory (the parent directory of ClientApp folder).
+4. In console, navigate to project/ClientApp.
 5. Install dependencies (JQuery, Bootstrap, React-Bootstrap  signalr and React-Router):  
 `npm install react-bootstrap bootstrap react-router-dom@6 jquery @microsoft/signalr --save`
 
@@ -54,6 +54,7 @@ Creating Servers from git files:
 `dotnet run`
 (Alternativly, it is more preffered to run with VS)
 # Notes
+1. Updating the readme after submission time was allowed by TA Yotam - meaning the assignment is only 1 day late (instead of 2).
 1. In Google Chrome (in opposed to Firefox) forms aren't automatically out-focused when disabled buttons are clicked. Therefore using Google Chrome browser requires clicking the background (or any other not-focused element) before clicking the login button.
 2. The api implements some more neccessary http calls (such as register/login). Please do not manually send those new requests.
 3. The Ratings Server works only in http.
