@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\USER\\source\\repos\\advanced-programming-2-backend\\advanced-programming-2-backend\\advanced-programming-2-backend.csproj": {}
+    "c:\\Users\\USER\\Advanced-Programming-2-assignment-2\\advanced-programming-2-backend\\advanced-programming-2-backend\\advanced-programming-2-backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\USER\\source\\repos\\advanced-programming-2-backend\\advanced-programming-2-backend\\advanced-programming-2-backend.csproj": {
+    "c:\\Users\\USER\\Advanced-Programming-2-assignment-2\\advanced-programming-2-backend\\advanced-programming-2-backend\\advanced-programming-2-backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\USER\\source\\repos\\advanced-programming-2-backend\\advanced-programming-2-backend\\advanced-programming-2-backend.csproj",
+        "projectUniqueName": "c:\\Users\\USER\\Advanced-Programming-2-assignment-2\\advanced-programming-2-backend\\advanced-programming-2-backend\\advanced-programming-2-backend.csproj",
         "projectName": "advanced-programming-2-backend",
-        "projectPath": "C:\\Users\\USER\\source\\repos\\advanced-programming-2-backend\\advanced-programming-2-backend\\advanced-programming-2-backend.csproj",
+        "projectPath": "c:\\Users\\USER\\Advanced-Programming-2-assignment-2\\advanced-programming-2-backend\\advanced-programming-2-backend\\advanced-programming-2-backend.csproj",
         "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\USER\\source\\repos\\advanced-programming-2-backend\\advanced-programming-2-backend\\obj\\",
+        "outputPath": "c:\\Users\\USER\\Advanced-Programming-2-assignment-2\\advanced-programming-2-backend\\advanced-programming-2-backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -53,6 +53,14 @@
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[6.0.5, )"
+            },
+            "MongoDB.Bson": {
+              "target": "Package",
+              "version": "[2.19.1, )"
+            },
+            "MongoDB.Driver": {
+              "target": "Package",
+              "version": "[2.19.1, )"
             }
           },
           "imports": [
