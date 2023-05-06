@@ -17,7 +17,7 @@ namespace advanced_programming_2_backend.Controllers
         public ActionResult<List<User>> Get() =>
             service.Get();
 
-        [HttpGet("{id:length(24)}", Name = "GetGame")]
+        [HttpGet("{id:length(24)}", Name = "GetUser")]
         public ActionResult<User> Get(string id)
         {
             var user = service.Get(id);
@@ -35,11 +35,11 @@ namespace advanced_programming_2_backend.Controllers
         {
             service.Create(user);
 
-            return CreatedAtRoute("GetGame", new { id = user.Id.ToString() }, user);
+            return CreatedAtRoute("GetUser", new { id = user.Id.ToString() }, user);
         }
 
         [HttpPut("{id:length(24)}")]
-        public IActionResult Update(string id, User gameIn)
+        public IActionResult Update(string id, User userIn)
         {
             var user = service.Get(id);
 
@@ -48,7 +48,7 @@ namespace advanced_programming_2_backend.Controllers
                 return NotFound();
             }
 
-            service.Update(id, gameIn);
+            service.Update(id, userIn);
 
             return NoContent();
         }
