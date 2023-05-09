@@ -8,6 +8,7 @@ namespace advanced_programming_2_backend.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
+        public string Company { get; set; }
         public User[] Workers { get; set; }
         public DateTime Date { get; set; }
         public Path Path { get; set; }
